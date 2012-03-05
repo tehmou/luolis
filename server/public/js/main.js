@@ -1,39 +1,46 @@
-var luolis = {};
+// Define the basic namespace, and a way to safely define more.
+define("luolis", { });
 
 (function () {
 
-    var canvas;
-
-    luolis.createInstance = function () {
-
+    luolis.Instance = function () {
         return {
             run: function () {
                 this.canvas = document.createElement("canvas");
                 document.body.appendChild(this.canvas);
 
-                this.ctx = this.canvas.getContext("2d");
+                this.world = new luolis.game.model.World(window.innerWidth, window.innerHeight);
+                this.world.initialize();
+
+                this.input = new luolis.game.input.KeyboardInput(this.world);
+                this.input.initialize();
+
+                this.renderer = new luolis.game.rendering.Renderer(this.canvas);
+                this.renderer.initialize();
+
+                this.game = new luolis.game.Game(this.world);
+                this.game.initialize();
+                this.game.startSinglePlayerGame(this.input);
 
                 this.resize = this.resize.bind(this);
                 this.render = this.render.bind(this);
-
                 this.resize();
                 this.render();
             },
             resize: function () {
-                this.canvas.width = this.width = window.innerWidth;
-                this.canvas.height = this.height = window.innerHeight;
+                this.renderer.width = this.canvas.width = window.innerWidth;
+                this.renderer.height = this.canvas.height = window.innerHeight;
             },
             render: function () {
-                this.ctx.fillStyle = "rgb(0,0,0)";
-                this.ctx.fillRect(0, 0, this.width, this.height);
+                this.game.updateFrame();
+                this.renderer.render(this.world);
                 requestAnimFrame(this.render);
             }
         };
-
     };
 
     luolis.initialize = function () {
-        var instance = luolis.createInstance();
+        var instance = new luolis.Instance();
         instance.run();
         document.body.onresize = instance.resize;
     };

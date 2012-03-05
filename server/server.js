@@ -1,4 +1,5 @@
 var static = require('node-static'),
+    coffee = require('coffee-script'),
     http = require('http');
 
 var webroot = './public';
@@ -10,6 +11,7 @@ exports.open = function (port) {
     });
 
     http.createServer(function(req, res) {
+
         req.addListener('end', function() {
             file.serve(req, res, function(err, result) {
                 if (err) {
@@ -21,6 +23,7 @@ exports.open = function (port) {
                         res.end();
                     }
                 } else {
+                    console.log(res);
                     console.log('%s - %s', req.url, res.message);
                 }
             });

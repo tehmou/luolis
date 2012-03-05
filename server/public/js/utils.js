@@ -17,3 +17,25 @@ window.requestAnimFrame = (function() {
             window.setTimeout(callback, 1000/60);
         };
 })();
+
+function define (path, obj) {
+    defineWithRoot(window, path, obj);
+}
+
+function defineWithRoot (root, path, obj) {
+    var part, parts = path.split(".");
+    while (part = parts.shift()) {
+        if (parts.length) {
+            if (!root.hasOwnProperty(part)) {
+                root[part] = {};
+            }
+        } else {
+            if (root.hasOwnProperty(part)) {
+                _.extend(root[part], obj);
+            } else {
+                root[part] = obj;
+            }
+        }
+        root = root[part];
+    }
+}
