@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Luolis</title>
+    <style type="text/css">
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+    <script src="js/utils.js" type="text/javascript"></script>
+    <script src="js/lib/stats.js" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
+</head>
+<body onload="luolis.initialize()">
+<script type="text/javascript">
+    var stats = new Stats();
+
+    // Align top-left
+    stats.getDomElement().style.position = 'absolute';
+    stats.getDomElement().style.left = '0px';
+    stats.getDomElement().style.top = '0px';
+
+    document.body.appendChild( stats.getDomElement() );
+
+    setInterval( function () {
+
+        stats.update();
+
+    }, 1000 / 60 );
+</script>
+</body>
+</html>

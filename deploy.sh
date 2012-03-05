@@ -3,8 +3,8 @@ KEY='-i /Users/ttuo/.ssh/home-laptop.pem'
 BACKUP_DIR='~/backup/luolis_'`date "+%Y-%m-%d-%T"`
 DESTINATION='luolis'
 
-echo "Copying client files.."
-cp client/* server/public/
+#echo "Copying client files.."
+#cp client/* server/public/
 
 echo "Backing up to $BACKUP_DIR"
 ssh $SERVER $KEY "mkdir ~/backup"
