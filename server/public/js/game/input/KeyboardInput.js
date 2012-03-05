@@ -13,19 +13,19 @@ luolis.game.input.KeyboardInput.prototype.attachShip = function (ship) {
     document.body.onkeydown = function (e) {
         switch (e.keyCode) {
             case LEFT:
-                ship.x -= 3;
+                ship.x -= 30;
                 break;
 
             case RIGHT:
-                ship.x += 3;
+                ship.x += 30;
                 break;
 
             case UP:
-                ship.y -= 3;
+                ship.y -= 30;
                 break;
 
             case DOWN:
-                ship.y += 3;
+                ship.y += 30;
                 break;
         }
     };
