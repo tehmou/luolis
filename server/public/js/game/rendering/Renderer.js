@@ -2,8 +2,6 @@ define("luolis.game.rendering.Renderer", function (canvas) {
     this.canvas = canvas;
 });
 
-luolis.game.rendering.Renderer.prototype.initialize = function () { };
-
 luolis.game.rendering.Renderer.prototype.attachShip = function (ship) {
     this.ship = ship;
 };

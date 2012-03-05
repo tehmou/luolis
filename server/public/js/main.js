@@ -10,19 +10,15 @@ define("luolis", { });
                 document.body.appendChild(this.canvas);
 
                 this.world = new luolis.game.model.World(window.innerWidth*1.4, window.innerHeight*1.4);
-                this.world.initialize();
-
-                this.game = new luolis.game.Game(this.world);
-                this.game.initialize();
+                this.physics = new luolis.game.physics.Physics();
+                this.game = new luolis.game.Game(this.world, this.physics);
                 var ship = this.game.startSinglePlayerGame(this.input);
 
                 this.renderer = new luolis.game.rendering.Renderer(this.canvas);
-                this.renderer.initialize();
                 this.renderer.attachShip(ship);
 
-                this.input = new luolis.game.input.KeyboardInput(this.world);
-                this.input.initialize();
-                this.input.attachShip(ship);
+                this.input = new luolis.game.input.KeyboardInput();
+                this.inputShipController = new luolis.game.input.InputShipController(ship, this.input.inputMap);
 
                 this.resize = this.resize.bind(this);
                 this.render = this.render.bind(this);
@@ -34,6 +30,7 @@ define("luolis", { });
                 this.renderer.height = this.canvas.height = window.innerHeight;
             },
             render: function () {
+                this.inputShipController.update();
                 this.game.updateFrame();
                 this.renderer.render(this.world);
                 requestAnimFrame(this.render);

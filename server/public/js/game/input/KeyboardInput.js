@@ -1,32 +1,22 @@
-define("luolis.game.input.KeyboardInput", function (world) {
-    this.world = world;
-});
+define("luolis.game.input.KeyboardInput", function () {
+    this.inputMap = {};
 
-luolis.game.input.KeyboardInput.prototype.initialize = function () { };
-
-luolis.game.input.KeyboardInput.prototype.attachShip = function (ship) {
-    var LEFT = 37,
-        RIGHT = 39,
-        UP = 38,
-        DOWN = 40;
+    var keyCodes = {
+        37: "LEFT",
+        39: "RIGHT",
+        38: "UP",
+        40: "DOWN"
+    };
 
     document.body.onkeydown = function (e) {
-        switch (e.keyCode) {
-            case LEFT:
-                ship.x -= 30;
-                break;
-
-            case RIGHT:
-                ship.x += 30;
-                break;
-
-            case UP:
-                ship.y -= 30;
-                break;
-
-            case DOWN:
-                ship.y += 30;
-                break;
+        if (keyCodes.hasOwnProperty(e.keyCode)) {
+            this.inputMap[keyCodes[e.keyCode]] = true;
         }
-    };
-};
+    }.bind(this);
+
+    document.body.onkeyup = function (e) {
+        if (keyCodes.hasOwnProperty(e.keyCode)) {
+            this.inputMap[keyCodes[e.keyCode]] = false;
+        }
+    }.bind(this);
+});
