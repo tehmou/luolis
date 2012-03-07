@@ -1,9 +1,9 @@
 define "luolis.game.rendering.Renderer", (canvas) ->
-  this.canvas = canvas
+  @canvas = canvas
   return this
 
 luolis.game.rendering.Renderer.prototype.attachShip = (ship) ->
-  this.ship = ship
+  @ship = ship
 
 do () ->
 
@@ -30,16 +30,16 @@ do () ->
 
   luolis.game.rendering.Renderer.prototype.render = (world) ->
 
-    ctx = this.canvas.getContext "2d"
+    ctx = @canvas.getContext "2d"
     ctx.fillStyle = "rgb(0,0,0)"
-    ctx.fillRect 0, 0, this.width, this.height
+    ctx.fillRect 0, 0, @width, @height
 
-    offsetX = this.ship.x - this.width/2
+    offsetX = @ship.x - @width/2
     offsetX = Math.max offsetX, 0
-    offsetX = Math.min offsetX, world.width-this.width
+    offsetX = Math.min offsetX, world.width-@width
 
-    offsetY = this.ship.y - this.height/2
+    offsetY = @ship.y - this.height/2
     offsetY = Math.max offsetY, 0
-    offsetY = Math.min offsetY, world.height-this.height
+    offsetY = Math.min offsetY, world.height-@height
 
     renderAt ctx, world, offsetX, offsetY
