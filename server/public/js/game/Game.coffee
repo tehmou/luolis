@@ -1,20 +1,21 @@
-define "luolis.game.Game", (world, physics) ->
-  @world = world
-  @physics = physics
-  return this
+class Game
+  constructor: (world, physics) ->
+    @world = world
+    @physics = physics
 
-luolis.game.Game.prototype.updateFrame = () ->
-  @physics.apply @world
+  updateFrame: ->
+    @physics.apply @world
 
-luolis.game.Game.prototype.startSinglePlayerGame = () ->
-  ship =
-      x: @world.width/2
-      y: @world.height/2
-      xv: 0
-      yv: 0
-      angle: 0
-      shape: [ [0, -30], [-8, -8], [8, -8] ]
+  startSinglePlayerGame: ->
+    ship =
+        x: @world.width/2
+        y: @world.height/2
+        xv: 0
+        yv: 0
+        angle: 0
+        shape: [ [0, -30], [-8, -8], [8, -8] ]
 
-  @world.ships.push ship
+    @world.ships.push ship
+    ship
 
-  return ship
+define "luolis.game.Game", Game
