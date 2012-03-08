@@ -1,20 +1,22 @@
 class Renderer
   constructor: (canvas) ->
+    console.log "Renderer", "Creating"
     @canvas = canvas
 
   attachShip: (ship) ->
+    console.log "Renderer", "Attaching ship"
     @ship = ship
 
-  render: (world) ->
+  render: (world, center) ->
     ctx = @canvas.getContext "2d"
     ctx.fillStyle = "rgb(0,0,0)"
     ctx.fillRect 0, 0, @width, @height
 
-    offsetX = @ship.x - @width/2
+    offsetX = center.x - @width/2
     offsetX = Math.max offsetX, 0
     offsetX = Math.min offsetX, world.width-@width
 
-    offsetY = @ship.y - this.height/2
+    offsetY = center.y - @height/2
     offsetY = Math.max offsetY, 0
     offsetY = Math.min offsetY, world.height-@height
 
@@ -22,7 +24,6 @@ class Renderer
 
 
 renderAt = (ctx, world, offsetX, offsetY) ->
-
   drawShip = (ship) ->
     ctx.fillStyle = "rgb(255,255,255)"
     ctx.beginPath()

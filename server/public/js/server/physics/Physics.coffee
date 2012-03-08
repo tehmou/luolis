@@ -1,5 +1,6 @@
 class Physics
   constructor: ->
+    console.log "Physics", "Creating"
     @gravity = 0.1
 
   apply: (world) ->

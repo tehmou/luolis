@@ -1,5 +1,6 @@
 class World
   constructor: (width, height) ->
+    console.log "World", "Creating"
     @width = width
     @height = height
     @reset()
