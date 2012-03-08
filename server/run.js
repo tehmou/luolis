@@ -1,3 +1,3 @@
-var luolisServer = require("./server.js");
+var luolisServer = require("www/server.js");
 
 luolisServer.open("80");
