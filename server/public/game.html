@@ -12,10 +12,12 @@
 
     </style>
 
+    <script src="js/lib/socket.io.js" type="text/javascript"></script>
     <script src="js/lib/stats.js" type="text/javascript"></script>
     <script src="js/lib/underscore.js" type="text/javascript"></script>
-    <script src="js/utils.js" type="text/javascript"></script>
 
+    <script src="js/common/log.js" type="text/javascript"></script>
+    <script src="js/common/utils.js" type="text/javascript"></script>
     <script src="js/common/shipInputTypes.js" type="text/javascript"></script>
 
     <script src="js/client/input/KeyboardInput.js" type="text/javascript"></script>
@@ -23,15 +25,10 @@
     <script src="js/client/rendering/Renderer.js" type="text/javascript"></script>
     <script src="js/client/Client.js" type="text/javascript"></script>
     <script src="js/client/clientUtils.js" type="text/javascript"></script>
-    <script src="js/server/model/World.js" type="text/javascript"></script>
-    <script src="js/server/physics/Physics.js" type="text/javascript"></script>
-    <script src="js/server/ClientServer.js" type="text/javascript"></script>
-    <script src="js/server/Game.js" type="text/javascript"></script>
-
-    <script src="js/client/singlePlayer.js"></script>
+    <script src="js/client/initializeClient.js" type="text/javascript"></script>
 
 </head>
-<body onload="luolis.initializeSinglePlayer()">
+<body onload="luolis.initializeClient()">
 <script type="text/javascript">
     var stats = new Stats();
 

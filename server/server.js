@@ -47,8 +47,8 @@ exports.open = function (port) {
 
 
     ioApp.sockets.on("connection", function (socket) {
-        socket.on("start", function (data, fn) {
-            fn("started");
+        socket.on("join", function (data, fn) {
+            fn("joined");
             console.log(data);
         });
     });

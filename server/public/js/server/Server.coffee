@@ -1,26 +1,34 @@
 lastClientId = 0
 
-class ClientServer
+class Server
 
   constructor: ->
-    console.log "ClientServer", "Creating"
+    log "Creating"
     @world = new luolis.game.model.World window.innerWidth*1.4, window.innerHeight*1.4
     #@world = new luolis.game.model.World window.innerWidth*1, window.innerHeight*1
     @game = new luolis.game.Game
     @game.loadWorld @world
+    @connect "http://localhost:9876"
+
+  connect: (url) ->
+    log "Connecting to " + url
+    @socket = io.connect url;
+    @socket.on "connect", () =>
+      @socket.emit "join", "", (data) =>
+        log data
 
   run: ->
-    console.log "ClientServer", "Running"
+    console.log NAME, "Running"
     setInterval @updateFrame, 1000/60
 
   updateFrame: =>
     @game.updateFrame()
 
   registerClient: ->
-    console.log "ClientServer", "Registring client"
+    console.log NAME, "Registring client"
     clientId = lastClientId
     @game.addPlayer clientId
-    console.log "ClientServer", "Registered client with id=" + clientId
+    console.log NAME, "Registered client with id=" + clientId
     lastClientId++
     clientId
 
@@ -42,4 +50,4 @@ class ClientServer
   getPlayer: (clientId) ->
     @world.getShipForPlayer clientId
 
-define "luolis.server.ClientServer", ClientServer
+define "luolis.server.Server", Server

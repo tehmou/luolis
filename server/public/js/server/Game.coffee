@@ -1,6 +1,6 @@
 class Game
   constructor: () ->
-    console.log "Creating game"
+    log "Creating game"
     @physics = new luolis.game.physics.Physics
 
   loadWorld: (world) ->
@@ -10,7 +10,7 @@ class Game
     @physics.apply @world
 
   addPlayer: (clientId) ->
-    console.log "Adding player to world"
+    log "Adding player to world"
     ship =
         x: @world.width/2
         y: @world.height/2
