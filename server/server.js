@@ -11,6 +11,7 @@ exports.open = function (port) {
     var app = express.createServer(),
         ioApp = io.listen(app);
 
+
     app.get("*", function (req, res) {
         var reqPath = webroot + req.params[0];
         if (reqPath.substr(reqPath.length-1) === "/") {
@@ -39,9 +40,11 @@ exports.open = function (port) {
         }
     });
 
+
+
     ioApp.sockets.on("connection", function (socket) {
-        socket.emit("news", { hello: "world" });
-        socket.on("my other event", function (data) {
+        socket.on("start", function (data, fn) {
+            fn("started");
             console.log(data);
         });
     });

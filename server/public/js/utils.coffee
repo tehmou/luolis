@@ -5,7 +5,7 @@ Function.prototype.bind = Function.prototype.bind || (obj) ->
     fnc.apply obj, arguments
 
 window.define = (path, obj) ->
-  defineWithRoot window, path, obj
+  defineWithRoot (window ? window : global), path, obj
 
 window.defineWithRoot = (root, path, obj) ->
   parts = path.split "."

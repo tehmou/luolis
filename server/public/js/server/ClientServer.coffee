@@ -4,10 +4,10 @@ class ClientServer
 
   constructor: ->
     console.log "ClientServer", "Creating"
-    #@world = new luolis.game.model.World window.innerWidth*1.4, window.innerHeight*1.4
-    @world = new luolis.game.model.World window.innerWidth*1, window.innerHeight*1
-    @physics = new luolis.game.physics.Physics
-    @game = new luolis.game.Game @world, @physics
+    @world = new luolis.game.model.World window.innerWidth*1.4, window.innerHeight*1.4
+    #@world = new luolis.game.model.World window.innerWidth*1, window.innerHeight*1
+    @game = new luolis.game.Game
+    @game.loadWorld @world
 
   run: ->
     console.log "ClientServer", "Running"
@@ -25,14 +25,20 @@ class ClientServer
     clientId
 
   processInput: (clientId, input) ->
+    console.log("input " + input + " from " + clientId);
+    ship = @world.getShipForPlayer clientId
+    if input & luolis.game.input.shipInputTypes.LEFT
+      ship.xv -= 1
+    if input & luolis.game.input.shipInputTypes.RIGHT
+      ship.xv += 1
 
-    #switch input
+  #switch input
     # when "LEFT"
 
   getWorld: (clientId) ->
     @world
 
   getPlayer: (clientId) ->
-    (ship for ship in @world.ships when ship.clientId == clientId)[0]
+    @world.getShipForPlayer clientId
 
 define "luolis.server.ClientServer", ClientServer

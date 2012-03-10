@@ -1,19 +1,17 @@
+defaultShipInputKeyMap =
+  ACCELERATE: 38
+  LEFT: 37
+  RIGHT: 39
+  SHOOT: 40
+
 class InputShipController
-  constructor: (ship, input) ->
-    @ship = ship
+  constructor: (input) ->
     @input = input
+    @keyMap = defaultShipInputKeyMap
 
-  update: ->
-    if @input.LEFT
-        @ship.xv -= 1
-
-    if @input.RIGHT
-        @ship.xv += 1
-
-    if @input.UP
-        @ship.yv -= 1
-
-    if @input.DOWN
-        @ship.yv += 1
+  getInput: ->
+    input = 0
+    input |= value for key, value of luolis.game.input.shipInputTypes when @input[@keyMap[key]]
+    input
 
 define "luolis.game.input.InputShipController", InputShipController

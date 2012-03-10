@@ -1,8 +1,10 @@
 class Game
-  constructor: (world, physics) ->
+  constructor: () ->
     console.log "Creating game"
+    @physics = new luolis.game.physics.Physics
+
+  loadWorld: (world) ->
     @world = world
-    @physics = physics
 
   updateFrame: ->
     @physics.apply @world
