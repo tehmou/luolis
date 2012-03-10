@@ -31,9 +31,10 @@ class ClientServer
       ship.xv -= 1
     if input & luolis.game.input.shipInputTypes.RIGHT
       ship.xv += 1
-
-  #switch input
-    # when "LEFT"
+    if input & luolis.game.input.shipInputTypes.ACCELERATE
+      ship.yv -= 1
+    if input & luolis.game.input.shipInputTypes.SHOOT
+      ship.yv += 1
 
   getWorld: (clientId) ->
     @world
