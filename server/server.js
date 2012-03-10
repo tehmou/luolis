@@ -25,7 +25,11 @@ exports.open = function (port) {
             if (path.existsSync(coffeePath)) {
                 console.log("Compile coffee for " + coffeePath);
                 try {
-                    var coffeeJS = coffee.compile(""+fs.readFileSync(coffeePath));
+                    var contents = fs.readFileSync(coffeePath);
+                    var name =/\/([a-zA-Z0-9]*)\..*$/.exec(reqPath)[1];
+                    var fnc = 'log = () -> Function.prototype.bind.call(console.log, console).apply(console, ["[' + name + ']"].concat(Array.prototype.slice.call(arguments)));\n';
+                    contents = fnc + contents;
+                    var coffeeJS = coffee.compile(contents);
                     res.send(coffeeJS);
                 } catch (err) {
                     res.send(err.message);
