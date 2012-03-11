@@ -1,0 +1,58 @@
+<!DOCTYPE html>  <html> <head>   <title>Engine.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               Engine.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Engine</span>
+
+  <span class="nv">constructor: </span><span class="nf">(broker) -&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Creating&quot;</span>
+    <span class="vi">@broker = </span><span class="nx">broker</span>
+    <span class="vi">@physics = </span><span class="k">new</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">physics</span><span class="p">.</span><span class="nx">Physics</span>
+
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;requestWorld&quot;</span><span class="p">,</span> <span class="nx">@onRequestWorld</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;collectiveInput&quot;</span><span class="p">,</span> <span class="nx">@onCollectiveInput</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;joined&quot;</span><span class="p">,</span> <span class="nx">@onJoined</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;parted&quot;</span><span class="p">,</span> <span class="nx">@onParted</span>
+
+  <span class="nv">onRequestWorld: </span><span class="o">=&gt;</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;world&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">@world</span><span class="p">]</span>
+
+  <span class="nv">loadWorld: </span><span class="nf">(world) -&gt;</span>
+    <span class="vi">@world = </span><span class="nx">world</span>
+
+  <span class="nv">createWorld: </span><span class="nf">(width, height) -&gt;</span>
+    <span class="nx">@loadWorld</span> <span class="k">new</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">World</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span>
+
+  <span class="nv">onJoined: </span><span class="p">(</span><span class="nx">clientId</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Player joining with id=&quot;</span> <span class="o">+</span> <span class="nx">clientId</span>
+    <span class="nv">ship =</span>
+      <span class="nv">x: </span><span class="nx">@world</span><span class="p">.</span><span class="nx">width</span><span class="o">/</span><span class="mi">2</span>
+      <span class="nv">y: </span><span class="nx">@world</span><span class="p">.</span><span class="nx">height</span><span class="o">/</span><span class="mi">2</span>
+      <span class="nv">xv: </span><span class="mi">0</span>
+      <span class="nv">yv: </span><span class="mi">0</span>
+      <span class="nv">angle: </span><span class="mi">0</span>
+      <span class="nv">shape: </span><span class="p">[</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">]</span> <span class="p">]</span>
+      <span class="nv">clientId: </span><span class="nx">clientId</span>
+    <span class="nx">@world</span><span class="p">.</span><span class="nx">ships</span><span class="p">.</span><span class="nx">push</span> <span class="nx">ship</span>
+
+  <span class="nv">onParted: </span><span class="p">(</span><span class="nx">clientId</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Player parting with id=&quot;</span> <span class="o">+</span> <span class="nx">clientId</span>
+
+  <span class="nv">onCollectiveInput: </span><span class="p">(</span><span class="nx">collectiveInput</span><span class="p">)</span> <span class="o">=&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>log "input " + input + " from " + clientId</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">processPlayer = </span><span class="p">(</span><span class="nx">clientId</span><span class="p">,</span> <span class="nx">input</span><span class="p">)</span> <span class="o">=&gt;</span>
+      <span class="nv">ship = </span><span class="nx">@world</span><span class="p">.</span><span class="nx">getShipForPlayer</span> <span class="nx">clientId</span>
+      <span class="k">if</span> <span class="o">!</span><span class="nx">ship</span> <span class="k">then</span> <span class="k">return</span>
+      <span class="k">if</span> <span class="nx">input</span> <span class="o">&amp;</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">shipInputTypes</span><span class="p">.</span><span class="nx">LEFT</span>
+        <span class="nx">ship</span><span class="p">.</span><span class="nx">xv</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="nx">input</span> <span class="o">&amp;</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">shipInputTypes</span><span class="p">.</span><span class="nx">RIGHT</span>
+        <span class="nx">ship</span><span class="p">.</span><span class="nx">xv</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="nx">input</span> <span class="o">&amp;</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">shipInputTypes</span><span class="p">.</span><span class="nx">ACCELERATE</span>
+        <span class="nx">ship</span><span class="p">.</span><span class="nx">yv</span> <span class="o">-=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="nx">input</span> <span class="o">&amp;</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">shipInputTypes</span><span class="p">.</span><span class="nx">SHOOT</span>
+        <span class="nx">ship</span><span class="p">.</span><span class="nx">yv</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nx">processPlayer</span><span class="p">(</span><span class="nx">clientId</span><span class="p">,</span> <span class="nx">input</span><span class="p">)</span> <span class="k">for</span> <span class="nx">clientId</span><span class="p">,</span> <span class="nx">input</span> <span class="k">of</span> <span class="nx">collectiveInput</span>
+    <span class="nx">@updateFrame</span><span class="p">()</span>
+
+  <span class="nv">updateFrame: </span><span class="o">=&gt;</span>
+    <span class="nx">@physics</span><span class="p">.</span><span class="nx">apply</span> <span class="nx">@world</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;worldupdated&quot;</span>
+
+<span class="nx">define</span> <span class="s">&quot;luolis.engine.Engine&quot;</span><span class="p">,</span> <span class="nx">Engine</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

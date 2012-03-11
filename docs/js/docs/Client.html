@@ -1,0 +1,48 @@
+<!DOCTYPE html>  <html> <head>   <title>Client.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               Client.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Client</span>
+  <span class="nv">constructor: </span><span class="nf">(broker, clientId) -&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Creating with clientId=&quot;</span> <span class="o">+</span> <span class="nx">clientId</span>
+
+    <span class="vi">@clientId = </span><span class="nx">clientId</span>
+    <span class="vi">@broker = </span><span class="nx">broker</span>
+
+    <span class="nx">log</span> <span class="s">&quot;Attaching to broker&quot;</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;joined&quot;</span><span class="p">,</span> <span class="nx">@onJoined</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;inputRequest&quot;</span><span class="p">,</span> <span class="nx">@onInputRequest</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;world&quot;</span><span class="p">,</span> <span class="nx">@onWorld</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;requestWorld&quot;</span>
+
+    <span class="nx">log</span> <span class="s">&quot;Setting up input&quot;</span>
+    <span class="vi">@input = </span><span class="k">new</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">KeyboardInput</span>
+    <span class="vi">@inputShipController = </span><span class="k">new</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">InputShipController</span> <span class="nx">@input</span><span class="p">.</span><span class="nx">inputMap</span>
+
+    <span class="nx">log</span> <span class="s">&quot;Attach to resize event&quot;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nv">body.onresize = </span><span class="nx">@resize</span>
+
+    <span class="nx">log</span> <span class="s">&quot;Requesting to join the game&quot;</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;requestJoin&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">clientId</span><span class="p">]</span>
+
+    <span class="nx">log</span> <span class="s">&quot;Starting rendering loop&quot;</span>
+    <span class="nx">@updateFrame</span><span class="p">()</span>
+
+  <span class="nv">resize: </span><span class="o">=&gt;</span>
+    <span class="nx">@renderer</span><span class="p">.</span><span class="nx">resize</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span>
+
+  <span class="nv">onJoined: </span><span class="p">(</span><span class="nx">clientId</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="k">if</span> <span class="nx">clientId</span> <span class="o">==</span> <span class="nx">@clientId</span>
+      <span class="k">if</span> <span class="o">!</span><span class="nx">@renderer</span>
+        <span class="vi">@renderer = </span><span class="k">new</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">rendering</span><span class="p">.</span><span class="nx">Renderer</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span>
+
+  <span class="nv">onInputRequest: </span><span class="p">(</span><span class="nx">timestamp</span><span class="p">)</span> <span class="o">=&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>log "onInputRequest"</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">input = </span><span class="nx">@inputShipController</span><span class="p">.</span><span class="nx">getInput</span><span class="p">()</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;input&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">@clientId</span><span class="p">,</span> <span class="nx">input</span><span class="p">,</span> <span class="nx">timestamp</span><span class="p">]</span>
+
+  <span class="nv">onWorld: </span><span class="p">(</span><span class="nx">world</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;onWorld&quot;</span><span class="p">,</span> <span class="nx">world</span>
+    <span class="vi">@world = </span><span class="nx">world</span>
+
+  <span class="nv">updateFrame: </span><span class="o">=&gt;</span>
+    <span class="nx">@renderer</span><span class="p">.</span><span class="nx">render</span> <span class="nx">@world</span><span class="p">,</span> <span class="nx">@world</span><span class="p">.</span><span class="nx">getShipForPlayer</span><span class="p">(</span><span class="nx">@clientId</span><span class="p">)</span> <span class="k">if</span> <span class="nx">@renderer</span> <span class="o">and</span> <span class="nx">@world</span>
+    <span class="nx">requestAnimFrame</span> <span class="nx">@updateFrame</span>
+
+<span class="nx">define</span> <span class="s">&quot;luolis.client.Client&quot;</span><span class="p">,</span> <span class="nx">Client</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

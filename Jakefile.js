@@ -2,8 +2,9 @@
 
     var sys = require("sys"),
         exec = require("child_process").exec,
-        spawn = require("child_process").spawn,
         fs = require("fs");
+
+    var JS_DIR = "src/public/js";
 
     task("default", function () {
         sys.puts("Run 'jake --tasks' to see possible tasks")
@@ -14,33 +15,40 @@
 
     desc("Clean documentation");
     task("clean-docs", function () {
-        exec("rm -rf docs");
-        exec("mkdir docs");
-    });
+        exec("rm -rf docs", null, function () {
+            exec("mkdir docs", null, complete);
+        });
+    }, true);
 
     desc("Build server documentation");
     task("build-server-docs", function () {
-        exec("node ./node_modules/docco/bin/docco src/server.js");
-    });
+        exec("mkdir docs/server", null, function () {
+            exec("cd docs/server && node ../../node_modules/docco/bin/docco ../../src/server.js", null, complete);
+        });
+    }, true);
 
+    // FIXME: This task should be async, but it is very difficult to make it so..
     desc("Build client documentation");
     task("build-client-docs", function () {
-        var jsDir = "src/public/js/";
-
-        exec("mkdir docs/js");
+        exec("mkdir docs/js", null, function () {
+            processDir(JS_DIR);
+        });
         function processDir (dir) {
             var contents = fs.readdirSync(dir);
             contents.forEach(function (item) {
+                if (item === "lib") {
+                    return;
+                }
                 var path = dir + "/" + item;
                 if (fs.statSync(path).isDirectory()) {
                     processDir(path);
+                } else {
+                    // FIXME: Must wait!!!
+                    exec("cd docs/js && node ../../node_modules/docco/bin/docco ../../" + path);
                 }
                 console.log(path);
-                //spawn("node", ["./node_modules/docco/bin/docco", "src/public/js/luolis.coffee", "src/public/js/broker/LocalBroker.coffee"])
             });
         }
-
-        processDir(jsDir);
     });
 
     desc("Run the local server at port given in first argument");

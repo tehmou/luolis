@@ -1,0 +1,60 @@
+<!DOCTYPE html>  <html> <head>   <title>Renderer.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               Renderer.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Renderer</span>
+  <span class="nv">constructor: </span><span class="nf">(width, height) -&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Creating&quot;</span>
+    <span class="vi">@canvas = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span> <span class="s">&quot;canvas&quot;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span> <span class="nx">@canvas</span>
+    <span class="nx">@resize</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span>
+
+  <span class="nv">attachShip: </span><span class="nf">(ship) -&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Attaching ship&quot;</span>
+    <span class="vi">@ship = </span><span class="nx">ship</span>
+
+  <span class="nv">resize: </span><span class="nf">(width, height) -&gt;</span>
+    <span class="vi">@width = @canvas.width = </span><span class="nx">width</span>
+    <span class="vi">@height = @canvas.height = </span><span class="nx">height</span>
+
+  <span class="nv">render: </span><span class="nf">(world, center) -&gt;</span>
+    <span class="nv">ctx = </span><span class="nx">@canvas</span><span class="p">.</span><span class="nx">getContext</span> <span class="s">&quot;2d&quot;</span>
+    <span class="nv">ctx.fillStyle = </span><span class="s">&quot;rgb(0,0,0)&quot;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillRect</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">@width</span><span class="p">,</span> <span class="nx">@height</span>
+
+    <span class="k">if</span> <span class="nx">@width</span> <span class="o">&lt;</span> <span class="nx">world</span><span class="p">.</span><span class="nx">width</span>
+      <span class="nv">offsetX = </span><span class="nx">center</span><span class="p">.</span><span class="nx">x</span> <span class="o">-</span> <span class="nx">@width</span><span class="o">/</span><span class="mi">2</span>
+      <span class="nv">offsetX = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span> <span class="nx">offsetX</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="nx">@width</span>
+      <span class="nv">offsetX = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span> <span class="nx">offsetX</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">else</span>
+      <span class="nv">offsetX = </span><span class="o">-</span><span class="p">(</span><span class="nx">@width</span> <span class="o">-</span> <span class="nx">world</span><span class="p">.</span><span class="nx">width</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="nx">@height</span> <span class="o">&lt;</span> <span class="nx">world</span><span class="p">.</span><span class="nx">height</span>
+      <span class="nv">offsetY = </span><span class="nx">center</span><span class="p">.</span><span class="nx">y</span> <span class="o">-</span> <span class="nx">@height</span><span class="o">/</span><span class="mi">2</span>
+      <span class="nv">offsetY = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span> <span class="nx">offsetY</span><span class="p">,</span> <span class="nx">world</span><span class="p">.</span><span class="nx">height</span><span class="o">-</span><span class="nx">@height</span>
+      <span class="nv">offsetY = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span> <span class="nx">offsetY</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">else</span>
+      <span class="nv">offsetY = </span><span class="o">-</span><span class="p">(</span><span class="nx">@height</span> <span class="o">-</span> <span class="nx">world</span><span class="p">.</span><span class="nx">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="nx">renderAt</span> <span class="nx">ctx</span><span class="p">,</span> <span class="nx">world</span><span class="p">,</span> <span class="nx">offsetX</span><span class="p">,</span> <span class="nx">offsetY</span>
+
+
+<span class="nv">renderAt = </span><span class="nf">(ctx, world, offsetX, offsetY) -&gt;</span>
+  <span class="nv">drawShip = </span><span class="nf">(ship) -&gt;</span>
+    <span class="nv">ctx.fillStyle = </span><span class="s">&quot;rgb(255,255,255)&quot;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">()</span>
+    <span class="nx">drawPolygon</span> <span class="nx">ship</span><span class="p">.</span><span class="nx">shape</span><span class="p">,</span> <span class="nx">ship</span><span class="p">.</span><span class="nx">x</span><span class="o">-</span><span class="nx">offsetX</span><span class="p">,</span> <span class="nx">ship</span><span class="p">.</span><span class="nx">y</span><span class="o">-</span><span class="nx">offsetY</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">fill</span><span class="p">()</span>
+
+  <span class="nv">drawPolygon = </span><span class="nf">(polygon, x, y) -&gt;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span> <span class="nx">x</span><span class="o">+</span><span class="nx">polygon</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nx">y</span><span class="o">+</span><span class="nx">polygon</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span> <span class="nx">x</span><span class="o">+</span><span class="nx">polygon</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nx">y</span><span class="o">+</span><span class="nx">polygon</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="nx">polygon</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">closePath</span><span class="p">()</span>
+
+  <span class="nx">world</span><span class="p">.</span><span class="nx">ships</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">drawShip</span><span class="p">)</span>
+
+  <span class="nv">ctx.strokeStyle = </span><span class="s">&quot;rgb(255,255,255)&quot;</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">()</span>
+  <span class="nx">drawPolygon</span> <span class="p">[[</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">6</span><span class="p">,</span><span class="nx">world</span><span class="p">.</span><span class="nx">height</span><span class="o">-</span><span class="mi">6</span><span class="p">],[</span><span class="nx">world</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="nx">world</span><span class="p">.</span><span class="nx">height</span><span class="o">-</span><span class="mi">6</span><span class="p">],[</span><span class="nx">world</span><span class="p">.</span><span class="nx">width</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="o">-</span><span class="nx">offsetX</span><span class="p">,</span><span class="o">-</span><span class="nx">offsetY</span>
+  <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">()</span>
+
+
+<span class="nx">define</span> <span class="s">&quot;luolis.game.rendering.Renderer&quot;</span><span class="p">,</span> <span class="nx">Renderer</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

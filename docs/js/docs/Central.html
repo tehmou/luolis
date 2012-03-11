@@ -1,0 +1,32 @@
+<!DOCTYPE html>  <html> <head>   <title>Central.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               Central.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Central</span>
+  <span class="nv">constructor: </span><span class="nf">(broker) -&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Creating&quot;</span>
+    <span class="vi">@broker = </span><span class="nx">broker</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;requestJoin&quot;</span><span class="p">,</span> <span class="nx">@onRequestJoin</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;requestPart&quot;</span><span class="p">,</span> <span class="nx">@onRequestPart</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">subscribe</span> <span class="s">&quot;input&quot;</span><span class="p">,</span> <span class="nx">@onInput</span>
+    <span class="vi">@frameCounter = </span><span class="mi">0</span>
+
+  <span class="nv">run: </span><span class="o">-&gt;</span>
+    <span class="nx">setInterval</span> <span class="nx">@mainLoop</span><span class="p">,</span> <span class="mi">1000</span><span class="o">/</span><span class="mi">24</span>
+
+  <span class="nv">mainLoop: </span><span class="o">=&gt;</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;collectiveInput&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">@collectiveInput</span><span class="p">]</span> <span class="k">if</span> <span class="nx">@collectiveInput</span>
+    <span class="vi">@collectiveInput = </span><span class="p">{}</span>
+    <span class="nx">@frameCounter</span><span class="o">++</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;inputRequest&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">@frameCounter</span><span class="p">]</span>
+
+  <span class="nv">onInput: </span><span class="p">(</span><span class="nx">clientId</span><span class="p">,</span> <span class="nx">input</span><span class="p">,</span> <span class="nx">timestamp</span><span class="p">)</span> <span class="o">=&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>log "Input from id=" + clientId</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">timestamp</span> <span class="o">==</span> <span class="nx">@frameCounter</span><span class="p">)</span>
+        <span class="nx">@collectiveInput</span><span class="p">[</span><span class="nx">clientId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">input</span>
+
+  <span class="nv">onRequestJoin: </span><span class="p">(</span><span class="nx">clientId</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Joining id=&quot;</span> <span class="o">+</span> <span class="nx">clientId</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;joined&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">clientId</span><span class="p">]</span>
+
+  <span class="nv">onRequestPart: </span><span class="p">(</span><span class="nx">clientId</span><span class="p">)</span> <span class="o">=&gt;</span>
+    <span class="nx">log</span> <span class="s">&quot;Parting id=&quot;</span> <span class="o">+</span> <span class="nx">clientId</span>
+    <span class="nx">@broker</span><span class="p">.</span><span class="nx">publish</span> <span class="s">&quot;parted&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nx">clientId</span><span class="p">]</span>
+
+<span class="nx">define</span> <span class="s">&quot;luolis.central.Central&quot;</span><span class="p">,</span> <span class="nx">Central</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>  <html> <head>   <title>InputShipController.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               InputShipController.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nv">defaultShipInputKeyMap =</span>
+  <span class="nx">ACCELERATE</span><span class="o">:</span><span class="err"> </span><span class="mi">38</span>
+  <span class="nx">LEFT</span><span class="o">:</span><span class="err"> </span><span class="mi">37</span>
+  <span class="nx">RIGHT</span><span class="o">:</span><span class="err"> </span><span class="mi">39</span>
+  <span class="nx">SHOOT</span><span class="o">:</span><span class="err"> </span><span class="mi">40</span>
+
+<span class="k">class</span> <span class="nx">InputShipController</span>
+  <span class="nv">constructor: </span><span class="nf">(input) -&gt;</span>
+    <span class="vi">@input = </span><span class="nx">input</span>
+    <span class="vi">@keyMap = </span><span class="nx">defaultShipInputKeyMap</span>
+
+  <span class="nv">getInput: </span><span class="o">-&gt;</span>
+    <span class="nv">input = </span><span class="mi">0</span>
+    <span class="nx">input</span> <span class="o">|=</span> <span class="nx">value</span> <span class="k">for</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="k">of</span> <span class="nx">luolis</span><span class="p">.</span><span class="nx">game</span><span class="p">.</span><span class="nx">input</span><span class="p">.</span><span class="nx">shipInputTypes</span> <span class="k">when</span> <span class="nx">@input</span><span class="p">[</span><span class="nx">@keyMap</span><span class="p">[</span><span class="nx">key</span><span class="p">]]</span>
+    <span class="nx">input</span>
+
+<span class="nx">define</span> <span class="s">&quot;luolis.game.input.InputShipController&quot;</span><span class="p">,</span> <span class="nx">InputShipController</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
