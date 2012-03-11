@@ -1,3 +1,5 @@
+# Main namespace
+
 window.define = (path, obj) ->
   defineWithRoot (window ? window : global), path, obj
 

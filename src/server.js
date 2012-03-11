@@ -1,3 +1,12 @@
+//
+// Server that serves static files and compiles coffee script
+// on the fly. Initial web sockets support included.
+//
+// For files it uses [express.js] and [socket.io] for web sockets.
+//
+//  [express.js]: http://expressjs.com/
+//  [socket.io]: http://socket.io/
+//
 var coffee = require("coffee-script"),
     express = require("express"),
     fs = require("fs"),
@@ -45,7 +54,6 @@ exports.open = function (port) {
 
 
     var lastClientId = 0
-
     ioApp.sockets.on("connection", function (socket) {
         socket.on("register", function (data, fn) {
             fn(lastClientId);
