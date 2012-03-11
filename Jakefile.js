@@ -30,10 +30,18 @@
     // FIXME: This task should be async, but it is very difficult to make it so..
     desc("Build client documentation");
     task("build-client-docs", function () {
+        var folderStructure = {},
+            indexCoffee = "";
+
         exec("mkdir docs/js", null, function () {
-            processDir(JS_DIR);
+            processDir(JS_DIR, folderStructure);
+            fs.writeFileSync("docs/js/index.coffee", indexCoffee);
+            exec("cd docs/js && node ../../node_modules/docco/bin/docco index.coffee", null, function () {
+                exec("rm -rf docs/js/index.coffee");
+            });
         });
-        function processDir (dir) {
+
+        function processDir (dir, folder) {
             var contents = fs.readdirSync(dir);
             contents.forEach(function (item) {
                 if (item === "lib") {
@@ -41,8 +49,14 @@
                 }
                 var path = dir + "/" + item;
                 if (fs.statSync(path).isDirectory()) {
-                    processDir(path);
+                    processDir(path, folder[item] = { _name: item });
                 } else {
+                    if (item === "namespace.coffee") {
+                        indexCoffee += "# " + folder._name + "\n";
+                        indexCoffee += "# --\n";
+                        indexCoffee += folder._description = ""+fs.readFileSync(path);
+                    }
+                    folder[item] = "file";
                     // FIXME: Must wait!!!
                     exec("cd docs/js && node ../../node_modules/docco/bin/docco ../../" + path);
                 }
