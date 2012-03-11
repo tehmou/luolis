@@ -16,8 +16,8 @@ class Engine
   loadWorld: (world) ->
     @world = world
 
-  createWorld: ->
-    @loadWorld new luolis.game.model.World window.innerWidth*1.4, window.innerHeight*1.4
+  createWorld: (width, height) ->
+    @loadWorld new luolis.game.model.World width, height
 
   onJoined: (clientId) =>
     log "Player joining with id=" + clientId

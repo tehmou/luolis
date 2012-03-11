@@ -18,13 +18,19 @@ class Renderer
     ctx.fillStyle = "rgb(0,0,0)"
     ctx.fillRect 0, 0, @width, @height
 
-    offsetX = center.x - @width/2
-    offsetX = Math.max offsetX, 0
-    offsetX = Math.min offsetX, world.width-@width
+    if @width < world.width
+      offsetX = center.x - @width/2
+      offsetX = Math.min offsetX, world.width-@width
+      offsetX = Math.max offsetX, 0
+    else
+      offsetX = -(@width - world.width) / 2
 
-    offsetY = center.y - @height/2
-    offsetY = Math.max offsetY, 0
-    offsetY = Math.min offsetY, world.height-@height
+    if @height < world.height
+      offsetY = center.y - @height/2
+      offsetY = Math.min offsetY, world.height-@height
+      offsetY = Math.max offsetY, 0
+    else
+      offsetY = -(@height - world.height) / 2
 
     renderAt ctx, world, offsetX, offsetY
 

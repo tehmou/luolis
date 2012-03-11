@@ -41,7 +41,7 @@
         function initialize () {
             var localBroker = new luolis.broker.LocalBroker();
             new luolis.central.Central(localBroker).run();
-            new luolis.engine.Engine(localBroker).createWorld();
+            new luolis.engine.Engine(localBroker).createWorld(400, 300);
             new luolis.client.Client(localBroker, "0");
         }
 
