@@ -11,7 +11,6 @@ exports.open = function (port) {
     var app = express.createServer(),
         ioApp = io.listen(app);
 
-
     app.get("*", function (req, res) {
         var reqPath = webroot + req.params[0];
         if (reqPath.substr(reqPath.length-1) === "/") {
@@ -45,11 +44,13 @@ exports.open = function (port) {
     });
 
 
+    var lastClientId = 0
 
     ioApp.sockets.on("connection", function (socket) {
-        socket.on("join", function (data, fn) {
-            fn("joined");
-            console.log(data);
+        socket.on("register", function (data, fn) {
+            fn(lastClientId);
+            console.log("Registered client with id=" + lastClientId);
+            lastClientId++;
         });
     });
 

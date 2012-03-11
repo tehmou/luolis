@@ -1,33 +1,48 @@
 class Client
-  constructor: (server, clientId) ->
-    console.log "Client", "Creating"
-    @server = server
+  constructor: (broker, clientId) ->
+    log "Creating with clientId=" + clientId
+
     @clientId = clientId
+    @broker = broker
 
-    @canvas = document.createElement "canvas"
-    document.body.appendChild @canvas
+    log "Attaching to broker"
+    @broker.subscribe "joined", @onJoined
+    @broker.subscribe "inputRequest", @onInputRequest
+    @broker.subscribe "world", @onWorld
+    @broker.publish "requestWorld"
 
-    @renderer = new luolis.game.rendering.Renderer @canvas
-    #@renderer.attachShip(ship)
-
+    log "Setting up input"
     @input = new luolis.game.input.KeyboardInput
     @inputShipController = new luolis.game.input.InputShipController @input.inputMap
 
-    @resize = @resize.bind this
-    @updateFrame = @updateFrame.bind this
-    @resize()
-    @updateFrame()
-
+    log "Attach to resize event"
     document.body.onresize = @resize
 
-  resize: ->
-    @renderer.width = @canvas.width = window.innerWidth
-    @renderer.height = @canvas.height = window.innerHeight
+    log "Requesting to join the game"
+    @broker.publish "requestJoin", [clientId]
 
-  updateFrame: ->
+    log "Starting rendering loop"
+    @updateFrame()
+
+  resize: =>
+    @renderer.resize window.innerWidth, window.innerHeight
+
+  onJoined: (clientId) =>
+    if clientId == @clientId
+      if !@renderer
+        @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight
+
+  onInputRequest: (timestamp) =>
+    #log "onInputRequest"
     input = @inputShipController.getInput()
-    @server.processInput @clientId, input if input
-    @renderer.render @server.getWorld(@clientId), @server.getPlayer(@clientId)
+    @broker.publish "input", [@clientId, input, timestamp]
+
+  onWorld: (world) =>
+    log "onWorld", world
+    @world = world
+
+  updateFrame: =>
+    @renderer.render @world, @world.getShipForPlayer(@clientId) if @renderer and @world
     requestAnimFrame @updateFrame
 
 define "luolis.client.Client", Client

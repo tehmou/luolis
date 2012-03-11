@@ -12,12 +12,16 @@
 
     </style>
 
+
+    <script src="js/lib/pubsub.js" type="text/javascript"></script>
     <script src="js/lib/socket.io.js" type="text/javascript"></script>
     <script src="js/lib/stats.js" type="text/javascript"></script>
     <script src="js/lib/underscore.js" type="text/javascript"></script>
 
-    <script src="js/common/log.js" type="text/javascript"></script>
-    <script src="js/common/utils.js" type="text/javascript"></script>
+    <script src="js/namespace.js" type="text/javascript"></script>
+
+    <script src="js/broker/LocalBroker.js" type="text/javascript"></script>
+
     <script src="js/common/shipInputTypes.js" type="text/javascript"></script>
 
     <script src="js/client/input/KeyboardInput.js" type="text/javascript"></script>
@@ -25,10 +29,40 @@
     <script src="js/client/rendering/Renderer.js" type="text/javascript"></script>
     <script src="js/client/Client.js" type="text/javascript"></script>
     <script src="js/client/clientUtils.js" type="text/javascript"></script>
-    <script src="js/client/initializeClient.js" type="text/javascript"></script>
+
+    <script src="js/engine/model/World.js" type="text/javascript"></script>
+    <script src="js/engine/physics/Physics.js" type="text/javascript"></script>
+    <script src="js/engine/Engine.js" type="text/javascript"></script>
+
+    <script src="js/central/Central.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        function initialize () {
+            var localBroker = new luolis.broker.LocalBroker();
+            new luolis.central.Central(localBroker).run();
+            new luolis.engine.Engine(localBroker).createWorld();
+            new luolis.client.Client(localBroker, "0");
+        }
+
+        function initializeSocket () {
+            //var socketAdapter = new luolis.server.SocketAdapter();
+            console.log("Connecting socket..");
+            var broker = io.connect("http://localhost:9876");
+            broker.on("connect", function () {
+                console.log("Socket connected.");
+                broker.emit("register", "", function (clientId) {
+                    console.log("Registered to broker with id=" + clientId);
+                    new luolis.server.Server(broker, clientId);
+                    new luolis.client.Client(broker, clientId);
+                });
+            });
+        }
+
+    </script>
 
 </head>
-<body onload="luolis.initializeClient()">
+<body onload="initialize()">
 <script type="text/javascript">
     var stats = new Stats();
 

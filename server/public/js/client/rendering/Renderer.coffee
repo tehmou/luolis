@@ -1,11 +1,17 @@
 class Renderer
-  constructor: (canvas) ->
-    console.log "Renderer", "Creating"
-    @canvas = canvas
+  constructor: (width, height) ->
+    log "Creating"
+    @canvas = document.createElement "canvas"
+    document.body.appendChild @canvas
+    @resize width, height
 
   attachShip: (ship) ->
-    console.log "Renderer", "Attaching ship"
+    log "Attaching ship"
     @ship = ship
+
+  resize: (width, height) ->
+    @width = @canvas.width = width
+    @height = @canvas.height = height
 
   render: (world, center) ->
     ctx = @canvas.getContext "2d"
