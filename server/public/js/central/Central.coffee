@@ -8,9 +8,9 @@ class Central
     @frameCounter = 0
 
   run: ->
-    setInterval @inputLoop, 1000/24
+    setInterval @mainLoop, 1000/24
 
-  inputLoop: =>
+  mainLoop: =>
     @broker.publish "collectiveInput", [@collectiveInput] if @collectiveInput
     @collectiveInput = {}
     @frameCounter++
