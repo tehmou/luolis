@@ -30,7 +30,7 @@
     // FIXME: This task should be async, but it is very difficult to make it so..
     desc("Build client documentation");
     task("build-client-docs", function () {
-        var folderStructure = {},
+        var folderStructure = { _name: "luolis" },
             indexCoffee = "";
 
         exec("mkdir docs/js", null, function () {
@@ -43,6 +43,7 @@
 
         function processDir (dir, folder) {
             var contents = fs.readdirSync(dir);
+            var description = "", fileList = "";
             contents.forEach(function (item) {
                 if (item === "lib") {
                     return;
@@ -52,12 +53,17 @@
                     processDir(path, folder[item] = { _name: item });
                 } else {
                     if (item === "namespace.coffee") {
-                        indexCoffee += "# " + folder._name + "\n";
-                        indexCoffee += "# --\n";
-                        indexCoffee += folder._description = ""+fs.readFileSync(path);
+                        //description = "# " + folder._name + "\n";
+                        //description += "# --\n";
+                        //description += folder._description = ""+fs.readFileSync(path);
+                    } else {
+                        fileList += "# <a href=''>" + item + "</a><br />\n";
                     }
                     folder[item] = "file";
+                    indexCoffee += description + fileList;
+
                     // FIXME: Must wait!!!
+
                     exec("cd docs/js && node ../../node_modules/docco/bin/docco ../../" + path);
                 }
                 console.log(path);
