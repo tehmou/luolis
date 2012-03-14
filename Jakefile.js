@@ -2,7 +2,8 @@
 
     var sys = require("sys"),
         exec = require("child_process").exec,
-        fs = require("fs");
+        fs = require("fs"),
+        path = require("path");
 
     var JS_DIR = "src/public/js";
 
@@ -34,6 +35,7 @@
             indexCoffee = "";
 
         exec("mkdir docs/js", null, function () {
+            readNamespaceInfo(JS_DIR);
             processDir(JS_DIR, folderStructure);
             fs.writeFileSync("docs/js/index.coffee", indexCoffee);
             exec("cd docs/js && node ../../node_modules/docco/bin/docco index.coffee", null, function () {
@@ -41,27 +43,37 @@
             });
         });
 
+        function readNamespaceInfo (currentPath) {
+            var nsFilepath = currentPath + "/namespace.coffee";
+            if (path.existsSync(nsFilepath)) {
+                indexCoffee += "\n" + fs.readFileSync(nsFilepath) + "\n#\n";
+            }
+        }
+
         function processDir (dir, folder) {
             var contents = fs.readdirSync(dir);
-            var description = "", fileList;
             contents.forEach(function (item) {
                 if (item === "lib") {
                     return;
                 }
-                var path = dir + "/" + item;
-                if (fs.statSync(path).isDirectory()) {
-                    indexCoffee += "# " + path.replace("src/public/js/", "").replace(/\//g, ".") + "\n";
+                var currentPath = dir + "/" + item;
+                if (fs.statSync(currentPath).isDirectory()) {
+                    indexCoffee += "# " + currentPath.replace("src/public/js/", "").replace(/\//g, ".") + "\n";
                     indexCoffee += "# --\n";
-                    processDir(path, folder[item] = { _name: item });
+                    readNamespaceInfo(currentPath);
+                    processDir(currentPath, folder[item] = { _name: item });
                 } else {
+                    if (item === "namespace.coffee") {
+                        return;
+                    }
                     folder[item] = "file";
                     indexCoffee += "# <a href='" + item.replace(".coffee", "") + ".html'>" + item + "</a><br />\n";
 
                     // FIXME: Must wait!!!
 
-                    exec("cd docs/js && node ../../node_modules/docco/bin/docco ../../" + path);
+                    exec("cd docs/js && node ../../node_modules/docco/bin/docco ../../" + currentPath);
                 }
-                console.log(path);
+                console.log(currentPath);
             });
         }
     });
