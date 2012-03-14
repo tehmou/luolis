@@ -39,7 +39,7 @@ renderAt = (ctx, world, offsetX, offsetY) ->
   drawShip = (ship) ->
     ctx.fillStyle = "rgb(255,255,255)"
     ctx.beginPath()
-    drawPolygon ship.shape, ship.x-offsetX, ship.y-offsetY
+    drawPolygon ship.shape, ship.body.m_body.m_xf.position.x-offsetX, ship.body.m_body.m_xf.position.y-offsetY
     ctx.fill()
 
   drawPolygon = (polygon, x, y) ->

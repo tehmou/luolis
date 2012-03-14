@@ -22,13 +22,10 @@ class Engine
   onJoined: (clientId) =>
     log "Player joining with id=" + clientId
     ship =
-      x: @world.width/2
-      y: @world.height/2
-      xv: 0
-      yv: 0
-      angle: 0
-      shape: [ [0, -30], [-8, -8], [8, -8] ]
+      body: @world.createShip()
       clientId: clientId
+      shape: [ [0, -30], [-8, -8], [8, -8] ]
+
     @world.ships.push ship
 
   onParted: (clientId) =>
@@ -40,13 +37,13 @@ class Engine
       ship = @world.getShipForPlayer clientId
       if !ship then return
       if input & luolis.game.input.shipInputTypes.LEFT
-        ship.xv -= 1
+        ship.body.m_body.m_linearVelocity.x -= 1
       if input & luolis.game.input.shipInputTypes.RIGHT
-        ship.xv += 1
+        ship.body.m_body.m_linearVelocity.x += 1
       if input & luolis.game.input.shipInputTypes.ACCELERATE
-        ship.yv -= 1
+        ship.body.m_body.m_linearVelocity.y -= 1
       if input & luolis.game.input.shipInputTypes.SHOOT
-        ship.yv += 1
+        ship.body.m_body.m_linearVelocity.y += 1
 
     processPlayer(clientId, input) for clientId, input of collectiveInput
     @updateFrame()
