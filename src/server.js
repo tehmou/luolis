@@ -13,10 +13,10 @@ var coffee = require("coffee-script"),
     path = require("path"),
     io = require('socket.io');
 
-var webroot = './public';
 
-exports.open = function (port) {
+exports.open = function (port, webroot) {
 
+    webroot = webroot || './public';
     var app = express.createServer(),
         ioApp = io.listen(app);
 

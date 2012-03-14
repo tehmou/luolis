@@ -43,24 +43,19 @@
 
         function processDir (dir, folder) {
             var contents = fs.readdirSync(dir);
-            var description = "", fileList = "";
+            var description = "", fileList;
             contents.forEach(function (item) {
                 if (item === "lib") {
                     return;
                 }
                 var path = dir + "/" + item;
                 if (fs.statSync(path).isDirectory()) {
+                    indexCoffee += "# " + path.replace("src/public/js/", "").replace(/\//g, ".") + "\n";
+                    indexCoffee += "# --\n";
                     processDir(path, folder[item] = { _name: item });
                 } else {
-                    if (item === "namespace.coffee") {
-                        //description = "# " + folder._name + "\n";
-                        //description += "# --\n";
-                        //description += folder._description = ""+fs.readFileSync(path);
-                    } else {
-                        fileList += "# <a href=''>" + item + "</a><br />\n";
-                    }
                     folder[item] = "file";
-                    indexCoffee += description + fileList;
+                    indexCoffee += "# <a href='" + item.replace(".coffee", "") + ".html'>" + item + "</a><br />\n";
 
                     // FIXME: Must wait!!!
 
@@ -74,7 +69,7 @@
     desc("Run the local server at port given in first argument");
     task("run-server", function (port) {
         port = port === undefined ? 9876 : port;
-        require("./src/server.js").open(port);
+        require("./src/server.js").open(port, "./src/public");
     });
 
 })();
