@@ -36,7 +36,6 @@ class Engine
     log "Player parting with id=" + clientId
 
   onCollectiveInput: (collectiveInput) =>
-    #log "input " + input + " from " + clientId
     processPlayer = (clientId, input) =>
       ship = @world.getShipForPlayer clientId
       if !ship then return
@@ -45,10 +44,12 @@ class Engine
       if input & luolis.game.input.shipInputTypes.RIGHT
         ship.rotation = (ship.rotation + 0.2) % (Math.PI*2)
       if input & luolis.game.input.shipInputTypes.ACCELERATE
-        ship.body.m_body.m_linearVelocity.x += Math.cos(ship.rotation)* 10.0
-        ship.body.m_body.m_linearVelocity.y += Math.sin(ship.rotation)* 10.0
-      #if input & luolis.game.input.shipInputTypes.SHOOT
-      #  ship.body.m_body.m_linearVelocity.y += 1
+        direction = new Box2D.Common.Math.b2Vec2(
+          Math.cos(ship.rotation) * 10000.0
+          Math.sin(ship.rotation) * 10000.0
+        )
+        center = ship.body.m_body.GetWorldCenter()
+        ship.body.m_body.ApplyImpulse direction, center
 
     processPlayer(clientId, input) for clientId, input of collectiveInput
     @updateFrame()

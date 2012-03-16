@@ -16,6 +16,8 @@ class Physics
   constructor: ->
     log "Creating"
     @box2d = new b2World(new b2Vec2(0, 100), true)
+    b2_maxTranslation = Box2D.Common.b2Settings.b2_maxTranslation = 30
+    Box2D.Common.b2Settings.b2_maxTranslationSquared = b2_maxTranslation*b2_maxTranslation
 
   apply: (world) ->
     @box2d.Step(1 / 60, 10, 10)
