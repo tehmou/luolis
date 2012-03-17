@@ -22,6 +22,7 @@
     <script src="js/define.js" type="text/javascript"></script>
 
     <script src="js/broker/LocalBroker.js" type="text/javascript"></script>
+    <script src="js/broker/SyncInputBroker.js" type="text/javascript"></script>
 
     <script src="js/common/shipInputTypes.js" type="text/javascript"></script>
 
@@ -39,19 +40,24 @@
 
     <script type="text/javascript">
 
-        function initialize () {
+        function initializeLocal () {
             var localBroker = new luolis.broker.LocalBroker();
             new luolis.central.Central(localBroker).run();
             new luolis.engine.Engine(localBroker).createWorld(400, 300);
             new luolis.client.Client(localBroker, "0");
         }
 
-        function initializeSocket () {
-            //var socketAdapter = new luolis.server.SocketAdapter();
+        function initializeSyncInput () {
             console.log("Connecting socket..");
-            var broker = io.connect("http://localhost:9876");
-            broker.on("connect", function () {
+            var socket = io.connect("http://localhost:9876");
+            socket.on("connect", function () {
                 console.log("Socket connected.");
+                var syncInputBroker = new luolis.broker.SyncInputBroker();
+                new luolis.central.Central(localBroker).run();
+                new luolis.engine.Engine(localBroker).createWorld(400, 300);
+                new luolis.client.Client(localBroker, "0");
+
+
                 broker.emit("register", "", function (clientId) {
                     console.log("Registered to broker with id=" + clientId);
                     new luolis.server.Server(broker, clientId);
@@ -63,7 +69,7 @@
     </script>
 
 </head>
-<body onload="initialize()">
+<body onload="initializeLocal()">
 <script type="text/javascript">
     var stats = new Stats();
 

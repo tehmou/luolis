@@ -35,7 +35,7 @@ exports.open = function (port, webroot) {
                 try {
                     var contents = fs.readFileSync(coffeePath);
                     var name =/\/([a-zA-Z0-9]*)\..*$/.exec(reqPath)[1];
-                    var fnc = 'log = () -> Function.prototype.bind.call(console.log, console).apply(console, ["[' + name + ']"].concat(Array.prototype.slice.call(arguments)));\n';
+                    var fnc = 'log = () -> window.log.apply(console, ["[' + name + ']"].concat(Array.prototype.slice.call(arguments)));\n';
                     contents = fnc + contents;
                     var coffeeJS = coffee.compile(contents);
                     res.send(coffeeJS);

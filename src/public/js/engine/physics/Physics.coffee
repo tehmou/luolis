@@ -15,7 +15,7 @@ b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
 class Physics
   constructor: ->
     log "Creating"
-    @box2d = new b2World(new b2Vec2(0, 100), true)
+    @box2d = new b2World(new b2Vec2(0, 200), true)
     b2_maxTranslation = Box2D.Common.b2Settings.b2_maxTranslation = 30
     Box2D.Common.b2Settings.b2_maxTranslationSquared = b2_maxTranslation*b2_maxTranslation
 
