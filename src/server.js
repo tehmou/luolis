@@ -55,6 +55,8 @@ exports.open = function (port, webroot) {
 
     var lastClientId = 0
     ioApp.sockets.on("connection", function (socket) {
+
+
         socket.on("register", function (data, fn) {
             fn(lastClientId);
             console.log("Registered client with id=" + lastClientId);

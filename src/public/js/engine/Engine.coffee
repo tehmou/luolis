@@ -56,6 +56,6 @@ class Engine
 
   updateFrame: =>
     @physics.apply @world
-    @broker.publish "worldupdated"
+    @broker.publish "worldUpdated"
 
 define "luolis.engine.Engine", Engine

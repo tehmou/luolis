@@ -1,4 +1,4 @@
-window.log = () ->
+window.log = ->
   Function.prototype.bind.call(console.log, console).apply(console, arguments);
 
 window.define = (path, obj) ->

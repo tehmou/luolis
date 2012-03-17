@@ -33,7 +33,6 @@ class Client
         @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight
 
   onInputRequest: (timestamp) =>
-    #log "onInputRequest"
     input = @inputShipController.getInput()
     @broker.publish "input", [@clientId, input, timestamp]
 

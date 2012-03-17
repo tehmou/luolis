@@ -2,6 +2,7 @@
 
 class LocalBroker
   constructor: ->
+    log "Creating"
     createPubSub this
 
 define "luolis.broker.LocalBroker", LocalBroker
