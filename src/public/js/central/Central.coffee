@@ -14,7 +14,7 @@ class Central
     @broker.publish "collectiveInput", [@collectiveInput] if @collectiveInput
     @collectiveInput = {}
     @frameCounter++
-    @broker.publish "inputRequest", [@frameCounter]
+    @broker.publish "requestInput", [@frameCounter]
 
   onInput: (clientId, input, timestamp) =>
     #log "Input from id=" + clientId

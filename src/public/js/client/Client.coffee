@@ -7,7 +7,7 @@ class Client
 
     log "Attaching to broker"
     @broker.subscribe "joined", @onJoined
-    @broker.subscribe "inputRequest", @onInputRequest
+    @broker.subscribe "requestInput", @onRequestInput
     @broker.subscribe "worldJSON", @onWorldJSON
 
     log "Setting up input"
@@ -32,7 +32,7 @@ class Client
       if !@renderer
         @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight
 
-  onInputRequest: (timestamp) =>
+  onRequestInput: (timestamp) =>
     input = @inputShipController.getInput()
     @broker.publish "input", [@clientId, input, timestamp]
 
@@ -45,7 +45,7 @@ class Client
   updateFrame: =>
     if @renderer and @worldJSON
       myShip = this.getShipForPlayer()
-      @renderer.render @worldJSON, myShip.position
+      @renderer.render @worldJSON, myShip.position if myShip
     requestAnimFrame @updateFrame
 
 define "luolis.client.Client", Client

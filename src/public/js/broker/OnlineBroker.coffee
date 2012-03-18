@@ -8,10 +8,10 @@ class OnlineBroker
 
   addSignalIn: (signal) =>
     @socket.on signal, =>
-      @publish signal, [arguments[0]]
+      @publish signal, Array.prototype.slice.call(arguments[0])
 
   addSignalOut: (signal) =>
     @subscribe signal, =>
-      @socket.emit signal, arguments[0]
+      @socket.emit signal, Array.prototype.slice.call(arguments)
 
 define "luolis.broker.OnlineBroker", OnlineBroker

@@ -72,7 +72,9 @@ exports.open = function (port, webroot) {
             "requestJoin",
             "joined",
             "requestPart",
-            "parted"
+            "parted",
+            "input",
+            "requestInput"
         ].forEach(function (signal) {
             enablePublicSignal(signal, socket);
         });
@@ -80,7 +82,7 @@ exports.open = function (port, webroot) {
 
     ioApp.sockets.on("connection", function (socket) {
         socket.on("register", function (data, fn) {
-            fn(lastClientId);
+            fn(""+lastClientId);
             enablePublicSignals(socket);
             sockets.push(socket);
             console.log("Registered client with id=" + lastClientId);

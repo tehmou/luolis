@@ -49,14 +49,15 @@
         function initializeHost () {
             var signalsIn = [
                 "requestJoin",
-                "requestPart"
+                "requestPart",
+                "input"
             ];
             var signalsOut = [
                 "worldJSON",
                 "joined",
-                "parted"
+                "parted",
+                "requestInput"
             ];
-
             var socketUrl = "http://localhost:9876";
             log("Connecting socket to " + socketUrl + "..");
             var socket = io.connect(socketUrl);
