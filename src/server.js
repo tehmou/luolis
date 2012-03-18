@@ -54,11 +54,35 @@ exports.open = function (port, webroot) {
 
 
     var lastClientId = 0
+    var sockets = [];
+
+    function enablePublicSignal (signal, socket) {
+        console.log("Enabling public signal '" + signal + "'");
+        socket.on(signal, function (data) {
+            console.log("Broadcasting " + signal);
+            sockets.forEach(function (socket) {
+                socket.emit(signal, data);
+            });
+        });
+    }
+
+    function enablePublicSignals (socket) {
+        [
+            "worldJSON",
+            "requestJoin",
+            "joined",
+            "requestPart",
+            "parted"
+        ].forEach(function (signal) {
+            enablePublicSignal(signal, socket);
+        });
+    }
+
     ioApp.sockets.on("connection", function (socket) {
-
-
         socket.on("register", function (data, fn) {
             fn(lastClientId);
+            enablePublicSignals(socket);
+            sockets.push(socket);
             console.log("Registered client with id=" + lastClientId);
             lastClientId++;
         });

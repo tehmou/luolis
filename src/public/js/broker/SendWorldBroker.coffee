@@ -4,11 +4,19 @@ class SendWorldBroker
     createPubSub this
     @socket = socket
 
-    this.subscribe "world", (world) =>
-      # FIXME: Cannot emit world because the JSON cannot be serialized..
-      # @socket.emit "world", world
+    this.subscribe "worldJSON", (worldJSON) =>
+      @socket.emit "worldJSON", worldJSON
 
-    this.subscribe "worldUpdated", () =>
-      this.publish "requestWorld"
+    @socket.on "requestJoin", (clientId) =>
+      @publish "requestJoin", [clientId]
+
+    @subscribe "joined", (clientId) =>
+      @socket.emit "joined", clientId
+
+    @socket.on "requestPart", (clientId) =>
+      @publish "requestPart", [clientId]
+
+    @subscribe "parted", (clientId) =>
+      @socket.emit "parted", clientId
 
 define "luolis.broker.SendWorldBroker", SendWorldBroker

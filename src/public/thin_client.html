@@ -7,9 +7,7 @@
 
         body {
             margin: 0;
-            padding: 4px 20px;
-            background: #111010;
-            color: #f0f0f0;
+            padding: 0;
         }
 
     </style>
@@ -23,8 +21,9 @@
     <script src="js/define.js" type="text/javascript"></script>
 
     <script src="js/broker/LocalBroker.js" type="text/javascript"></script>
-    <script src="js/broker/SyncInputBroker.js" type="text/javascript"></script>
     <script src="js/broker/SendWorldBroker.js" type="text/javascript"></script>
+    <script src="js/broker/SyncInputBroker.js" type="text/javascript"></script>
+    <script src="js/broker/ReceiveWorldBroker.js" type="text/javascript"></script>
 
     <script src="js/common/shipInputTypes.js" type="text/javascript"></script>
 
@@ -42,23 +41,16 @@
 
     <script type="text/javascript">
 
-        var oldLog = window.log;
-        window.log = function () {
-            document.getElementById("log").innerHTML += Array.prototype.join.apply(arguments    , [" "]) + "\n";
-            oldLog.apply(oldLog, arguments);
-        };
-
-        function initializeHost () {
+        function initializeClient () {
             var socketUrl = "http://localhost:9876";
             log("Connecting socket to " + socketUrl + "..");
             var socket = io.connect(socketUrl);
             socket.on("connect", function () {
                 log("Socket connected.");
                 socket.emit("register", null, function (clientId) {
-                    log("Registered.");
-                    var broker = new luolis.broker.SendWorldBroker(socket);
-                    new luolis.central.Central(broker).run();
-                    new luolis.engine.Engine(broker).createWorld(400, 300);
+                    log ("Registered with clientId=" + clientId);
+                    var broker = new luolis.broker.ReceiveWorldBroker(socket);
+                    new luolis.client.Client(broker, clientId);
                 });
             });
             socket.on("disconnect", function () {
@@ -69,7 +61,22 @@
     </script>
 
 </head>
-<body onload="initializeHost()">
-<pre id="log"></pre>
+<body onload="initializeClient()">
+<script type="text/javascript">
+    var stats = new Stats();
+
+    // Align top-left
+    stats.getDomElement().style.position = 'absolute';
+    stats.getDomElement().style.left = '10px';
+    stats.getDomElement().style.top = '10px';
+
+    document.body.appendChild( stats.getDomElement() );
+
+    setInterval( function () {
+
+        stats.update();
+
+    }, 1000 / 60 );
+</script>
 </body>
 </html>

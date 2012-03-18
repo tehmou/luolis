@@ -8,7 +8,7 @@ var sys = require("sys"),
 var BUILD_DIR = "build";
 
 exports.clean = function (DOCS_DIR) {
-    var dir = DOCS_DIR + "/" + BUILD_DIR;
+    var dir = path.join(DOCS_DIR, BUILD_DIR);
     wrench.rmdirSyncRecursive(dir, true);
     fs.mkdirSync(dir, 0775);
 };

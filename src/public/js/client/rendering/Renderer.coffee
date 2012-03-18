@@ -36,11 +36,12 @@ class Renderer
 
 
 renderAt = (ctx, world, offsetX, offsetY) ->
+
   drawShip = (ship) ->
-    x = ship.body.m_body.m_xf.position.x-offsetX
-    y = ship.body.m_body.m_xf.position.y-offsetY
+    x = ship.position.x-offsetX
+    y = ship.position.y-offsetY
     angle = ship.rotation
-    r = ship.body.m_shape.m_radius
+    r = ship.radius
 
     ctx.fillStyle = "rgb(255,255,255)"
     ctx.beginPath()
@@ -57,7 +58,7 @@ renderAt = (ctx, world, offsetX, offsetY) ->
   world.groundBodies.forEach (body) ->
     ctx.fillStyle = "rgb(255,255,255)"
     ctx.beginPath()
-    drawPolygon body.m_shape.m_vertices, body.m_body.m_xf.position.x-offsetX, body.m_body.m_xf.position.y-offsetY
+    drawPolygon body.shape, body.position.x-offsetX, body.position.y-offsetY
     ctx.stroke()
 
   world.ships.forEach drawShip

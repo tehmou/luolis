@@ -8,8 +8,7 @@ class Client
     log "Attaching to broker"
     @broker.subscribe "joined", @onJoined
     @broker.subscribe "inputRequest", @onInputRequest
-    @broker.subscribe "world", @onWorld
-    @broker.publish "requestWorld"
+    @broker.subscribe "worldJSON", @onWorldJSON
 
     log "Setting up input"
     @input = new luolis.game.input.KeyboardInput
@@ -19,15 +18,16 @@ class Client
     document.body.onresize = @resize
 
     log "Requesting to join the game"
-    @broker.publish "requestJoin", [clientId]
+    @broker.publish "requestJoin", [@clientId]
 
-    log "Starting rendering loop"
+    log "Starting rendering loop without renderer"
     @updateFrame()
 
   resize: =>
-    @renderer.resize window.innerWidth, window.innerHeight
+    @renderer.resize window.innerWidth, window.innerHeight if @renderer
 
   onJoined: (clientId) =>
+    log "Joined, create renderer."
     if clientId == @clientId
       if !@renderer
         @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight
@@ -36,12 +36,16 @@ class Client
     input = @inputShipController.getInput()
     @broker.publish "input", [@clientId, input, timestamp]
 
-  onWorld: (world) =>
-    log "onWorld", world
-    @world = world
+  onWorldJSON: (worldJSON) =>
+    @worldJSON = worldJSON
+
+  getShipForPlayer: =>
+    (ship for ship in @worldJSON.ships when ship.clientId == @clientId)[0]
 
   updateFrame: =>
-    @renderer.render @world, @world.getShipForPlayer(@clientId) if @renderer and @world
+    if @renderer and @worldJSON
+      myShip = this.getShipForPlayer()
+      @renderer.render @worldJSON, myShip.position
     requestAnimFrame @updateFrame
 
 define "luolis.client.Client", Client

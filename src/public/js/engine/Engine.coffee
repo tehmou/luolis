@@ -5,21 +5,17 @@ class Engine
     @broker = broker
     @physics = new luolis.game.physics.Physics
 
-    @broker.subscribe "requestWorld", @onRequestWorld
     @broker.subscribe "collectiveInput", @onCollectiveInput
     @broker.subscribe "joined", @onJoined
     @broker.subscribe "parted", @onParted
 
-  onRequestWorld: =>
-    @broker.publish "world", [@world]
-
-  loadWorld: (world) ->
-    @world = world
+  sendWorldJSON: =>
+    @broker.publish "worldJSON", [@world.toJSON()]
 
   createWorld: (width, height) ->
     world = new luolis.game.model.World width, height
     world.addGround @physics.createGround width, height
-    @loadWorld world
+    @world = world
 
   onJoined: (clientId) =>
     log "Player joining with id=" + clientId
@@ -56,6 +52,6 @@ class Engine
 
   updateFrame: =>
     @physics.apply @world
-    @broker.publish "worldUpdated"
+    this.sendWorldJSON()
 
 define "luolis.engine.Engine", Engine
