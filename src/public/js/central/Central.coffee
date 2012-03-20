@@ -2,8 +2,8 @@ class Central
   constructor: (broker) ->
     log "Creating"
     @broker = broker
-    @broker.subscribe "requestJoin", @onRequestJoin
-    @broker.subscribe "requestPart", @onRequestPart
+    @broker.subscribe "joined", @onJoined
+    @broker.subscribe "parted", @onParted
     @broker.subscribe "input", @onInput
     @frameCounter = 0
 
@@ -21,12 +21,10 @@ class Central
     # if (timestamp == @frameCounter)
     @collectiveInput[clientId] = input
 
-  onRequestJoin: (clientId) =>
+  onJoined: (clientId) =>
     log "Joining id=" + clientId
-    @broker.publish "joined", [clientId]
 
-  onRequestPart: (clientId) =>
+  onParted: (clientId) =>
     log "Parting id=" + clientId
-    @broker.publish "parted", [clientId]
 
 define "luolis.central.Central", Central

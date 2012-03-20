@@ -37,14 +37,12 @@
             luolis.common.createDomLog(document.getElementById("log-container"));
 
             var signalsIn = [
-                "requestJoin",
-                "requestPart",
+                "joined",
+                "parted",
                 "input"
             ];
             var signalsOut = [
                 "worldJSON",
-                "joined",
-                "parted",
                 "requestInput"
             ];
             var socketUrl = "http://localhost:9876";

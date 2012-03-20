@@ -38,6 +38,8 @@ class Client
     @broker.publish "input", [@clientId, input, timestamp]
 
   onWorldJSON: (worldJSON) =>
+    if !@worldJSON
+      log "First world received"
     @worldJSON = worldJSON
 
   getShipForPlayer: =>

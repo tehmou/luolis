@@ -1,22 +1,24 @@
 exports.createGame = function () {
     var sockets = [];
 
+    function publishPublicSignal (signal, data) {
+        console.log("Broadcasting " + signal);
+        sockets.forEach(function (socket) {
+            socket.emit(signal, data);
+        });
+    }
+
     function enablePublicSignal (signal, socket) {
         console.log("Enabling public signal '" + signal + "'");
         socket.on(signal, function (data) {
-            console.log("Broadcasting " + signal);
-            sockets.forEach(function (socket) {
-                socket.emit(signal, data);
-            });
+            publishPublicSignal(signal, data);
         });
     }
 
     function enablePublicSignals (socket) {
         [
             "worldJSON",
-            "requestJoin",
             "joined",
-            "requestPart",
             "parted",
             "input",
             "requestInput"
@@ -26,10 +28,11 @@ exports.createGame = function () {
     }
 
     return {
-        join: function (socket) {
+        join: function (socket, clientId) {
+            console.log("Joining " + clientId);
             enablePublicSignals(socket);
             sockets.push(socket);
-
+            publishPublicSignal("joined", clientId);
         }
     }
 };
