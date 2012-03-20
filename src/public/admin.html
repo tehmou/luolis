@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Luolis</title>
+
+    <link href="style/basic.css" rel="stylesheet">
+
+    <script src="js/lib/pubsub.js" type="text/javascript"></script>
+    <script src="js/lib/socket.io.js" type="text/javascript"></script>
+    <script src="js/lib/stats.js" type="text/javascript"></script>
+    <script src="js/lib/underscore.js" type="text/javascript"></script>
+    <script src="js/lib/Box2dWeb-2.1.a.3.js" type="text/javascript"></script>
+
+    <script src="js/define.js" type="text/javascript"></script>
+
+    <script src="js/broker/OnlineBroker.js" type="text/javascript"></script>
+
+    <script src="js/common/shipInputTypes.js" type="text/javascript"></script>
+    <script src="js/common/createDomLog.js" type="text/javascript"></script>
+
+    <script src="js/client/input/KeyboardInput.js" type="text/javascript"></script>
+    <script src="js/client/input/InputShipController.js" type="text/javascript"></script>
+    <script src="js/client/rendering/Renderer.js" type="text/javascript"></script>
+    <script src="js/client/Client.js" type="text/javascript"></script>
+    <script src="js/client/clientUtils.js" type="text/javascript"></script>
+
+    <script src="js/engine/model/World.js" type="text/javascript"></script>
+    <script src="js/engine/physics/Physics.js" type="text/javascript"></script>
+    <script src="js/engine/Engine.js" type="text/javascript"></script>
+
+    <script src="js/central/Central.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        function initializeAdmin () {
+            luolis.common.createDomLog(document.getElementById("log-container"));
+
+            var socketUrl = "http://localhost:9876";
+            log("Connecting socket to " + socketUrl + "..");
+            var socket = io.connect(socketUrl);
+            socket.on("connect", function () {
+                log("Socket connected.");
+                log("Requesting for a list of games..");
+                socket.emit("admin", null, function (games) {
+                    log("Received list of games:");
+                    games.forEach(function (game) {
+                        log("  " + JSON.stringify(game));
+                    });
+                });
+            });
+            socket.on("disconnect", function () {
+                log("Socket disconnected.");
+            });
+        }
+
+    </script>
+
+</head>
+<body onload="initializeAdmin()">
+<div id="log-container"></div>
+</body>
+</html>

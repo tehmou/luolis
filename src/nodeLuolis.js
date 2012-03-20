@@ -18,7 +18,14 @@ exports.open = function (app) {
         });
 
         socket.on("admin", function (data, fn) {
-
+            var gamesJSON = [];
+            games.forEach(function (game, index) {
+                gamesJSON.push({
+                    id: index,
+                    status: game.getStatus()
+                })
+            });
+            fn(gamesJSON);
         });
     });
 };

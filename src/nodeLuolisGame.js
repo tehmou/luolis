@@ -33,6 +33,11 @@ exports.createGame = function () {
             enablePublicSignals(socket);
             sockets.push(socket);
             publishPublicSignal("joined", clientId);
+        },
+        getStatus: function () {
+            return {
+                status: "running"
+            };
         }
     }
 };
