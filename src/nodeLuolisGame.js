@@ -34,6 +34,11 @@ exports.createGame = function () {
             sockets.push(socket);
             publishPublicSignal("joined", clientId);
         },
+        part: function (socket, clientId) {
+            console.log("Parting " + clientId);
+            publishPublicSignal("parted", clientId);
+            sockets = sockets.filter(function (s) { return s !== socket; });
+        },
         getStatus: function () {
             return {
                 status: "running"

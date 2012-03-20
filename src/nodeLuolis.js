@@ -15,6 +15,11 @@ exports.open = function (app) {
             games[0].join(socket, clientId);
             console.log("Registered client with id=" + lastClientId);
             lastClientId++;
+
+            socket.on("disconnect", function () {
+                console.log("Client disconnected, id=" + clientId);
+                games[0].part(socket, clientId);
+            });
         });
 
         socket.on("admin", function (data, fn) {
