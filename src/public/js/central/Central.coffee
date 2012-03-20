@@ -18,8 +18,8 @@ class Central
 
   onInput: (clientId, input, timestamp) =>
     #log "Input from id=" + clientId
-    if (timestamp == @frameCounter)
-        @collectiveInput[clientId] = input
+    # if (timestamp == @frameCounter)
+    @collectiveInput[clientId] = input
 
   onRequestJoin: (clientId) =>
     log "Joining id=" + clientId

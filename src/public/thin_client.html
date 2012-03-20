@@ -3,14 +3,8 @@
 <html>
 <head>
     <title>Luolis</title>
-    <style type="text/css">
 
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-    </style>
+    <link href="style/basic.css" rel="stylesheet">
 
     <script src="js/lib/pubsub.js" type="text/javascript"></script>
     <script src="js/lib/socket.io.js" type="text/javascript"></script>
@@ -23,6 +17,7 @@
     <script src="js/broker/OnlineBroker.js" type="text/javascript"></script>
 
     <script src="js/common/shipInputTypes.js" type="text/javascript"></script>
+    <script src="js/common/createDomLog.js" type="text/javascript"></script>
 
     <script src="js/client/input/KeyboardInput.js" type="text/javascript"></script>
     <script src="js/client/input/InputShipController.js" type="text/javascript"></script>
@@ -39,6 +34,8 @@
     <script type="text/javascript">
 
         function initializeClient () {
+            luolis.common.createDomLog(document.getElementById("log-container"));
+
             var signalsIn = [
                 "worldJSON",
                 "joined",
@@ -58,7 +55,8 @@
                 socket.emit("register", null, function (clientId) {
                     log ("Registered with clientId=" + clientId);
                     var broker = new luolis.broker.OnlineBroker(socket, signalsIn, signalsOut);
-                    new luolis.client.Client(broker, clientId);
+                    new luolis.client.Client(broker, clientId, document.getElementById("gameCanvas"));
+                    luolis.common.toggleDomLog();
                 });
             });
             socket.on("disconnect", function () {
@@ -75,7 +73,7 @@
 
     // Align top-left
     stats.getDomElement().style.position = 'absolute';
-    stats.getDomElement().style.left = '10px';
+    stats.getDomElement().style.right = '10px';
     stats.getDomElement().style.top = '10px';
 
     document.body.appendChild( stats.getDomElement() );
@@ -86,5 +84,8 @@
 
     }, 1000 / 60 );
 </script>
+<canvas id="gameCanvas" width="1" height="1"></canvas>
+<div id="log-container"><pre id="log"></pre></div>
+<div id="toggle-log"><span>Toggle log</span></div>
 </body>
 </html>

@@ -1,9 +1,10 @@
 class Client
-  constructor: (broker, clientId) ->
+  constructor: (broker, clientId, el) ->
     log "Creating with clientId=" + clientId
 
-    @clientId = clientId
     @broker = broker
+    @clientId = clientId
+    @el = el
 
     log "Attaching to broker"
     @broker.subscribe "joined", @onJoined
@@ -30,7 +31,7 @@ class Client
     log "Joined, create renderer."
     if clientId == @clientId
       if !@renderer
-        @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight
+        @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight, @el
 
   onRequestInput: (timestamp) =>
     input = @inputShipController.getInput()

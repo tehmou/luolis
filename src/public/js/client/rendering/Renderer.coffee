@@ -1,8 +1,11 @@
 class Renderer
-  constructor: (width, height) ->
+  constructor: (width, height, canvas) ->
     log "Creating"
-    @canvas = document.createElement "canvas"
-    document.body.appendChild @canvas
+    if canvas
+      @canvas = canvas
+    else
+      @canvas = document.createElement "canvas"
+      document.body.appendChild @canvas
     @resize width, height
 
   attachShip: (ship) ->
