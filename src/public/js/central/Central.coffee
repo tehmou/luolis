@@ -8,6 +8,7 @@ class Central
     @frameCounter = 0
 
   run: ->
+    log "Starting main loop"
     setInterval @mainLoop, 1000/24
 
   mainLoop: =>
@@ -17,7 +18,6 @@ class Central
     @broker.publish "requestInput", [@frameCounter]
 
   onInput: (clientId, input, timestamp) =>
-    #log "Input from id=" + clientId
     # if (timestamp == @frameCounter)
     @collectiveInput[clientId] = input
 
