@@ -29,14 +29,22 @@ exports.createGame = function () {
 
     return {
         join: function (socket, clientId) {
-            console.log("Joining " + clientId);
+            console.log("Joining client" + clientId);
             enablePublicSignals(socket);
             sockets.push(socket);
             publishPublicSignal("joined", clientId);
         },
+        joinEngine: function (socket, clientId) {
+            console.log("Joining engine" + clientId);
+            enablePublicSignals(socket);
+            sockets.push(socket);
+        },
         part: function (socket, clientId) {
             console.log("Parting " + clientId);
             publishPublicSignal("parted", clientId);
+            sockets = sockets.filter(function (s) { return s !== socket; });
+        },
+        partEngine: function (socket, clientId) {
             sockets = sockets.filter(function (s) { return s !== socket; });
         },
         getStatus: function () {

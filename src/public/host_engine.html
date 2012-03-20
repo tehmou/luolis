@@ -50,7 +50,7 @@
             var socket = io.connect(socketUrl);
             socket.on("connect", function () {
                 log("Socket connected.");
-                socket.emit("register", null, function (clientId) {
+                socket.emit("registerEngine", null, function (clientId) {
                     log("Registered.");
                     var broker = new luolis.broker.OnlineBroker(socket, signalsIn, signalsOut);
                     new luolis.central.Central(broker).run();
