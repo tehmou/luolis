@@ -11,14 +11,13 @@ var coffee = require("coffee-script"),
     express = require("express"),
     fs = require("fs"),
     path = require("path"),
-    io = require('socket.io');
+    nodeLuolis = require("./nodeLuolis.js");
 
 
 exports.open = function (port, webroot) {
 
     webroot = webroot || './public';
-    var app = express.createServer(),
-        ioApp = io.listen(app);
+    var app = express.createServer();
 
     app.get("*", function (req, res) {
         var reqPath = webroot + req.params[0];
@@ -52,43 +51,7 @@ exports.open = function (port, webroot) {
         }
     });
 
-
-    var lastClientId = 0
-    var sockets = [];
-
-    function enablePublicSignal (signal, socket) {
-        console.log("Enabling public signal '" + signal + "'");
-        socket.on(signal, function (data) {
-            console.log("Broadcasting " + signal);
-            sockets.forEach(function (socket) {
-                socket.emit(signal, data);
-            });
-        });
-    }
-
-    function enablePublicSignals (socket) {
-        [
-            "worldJSON",
-            "requestJoin",
-            "joined",
-            "requestPart",
-            "parted",
-            "input",
-            "requestInput"
-        ].forEach(function (signal) {
-            enablePublicSignal(signal, socket);
-        });
-    }
-
-    ioApp.sockets.on("connection", function (socket) {
-        socket.on("register", function (data, fn) {
-            fn(""+lastClientId);
-            enablePublicSignals(socket);
-            sockets.push(socket);
-            console.log("Registered client with id=" + lastClientId);
-            lastClientId++;
-        });
-    });
+    nodeLuolis.open(app);
 
     app.listen(port);
 
