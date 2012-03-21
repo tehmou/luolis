@@ -1,0 +1,1 @@
+require("./server/server.js").open(3000, "./client");
