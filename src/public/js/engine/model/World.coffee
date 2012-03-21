@@ -18,6 +18,10 @@ class World
   getShipForPlayer: (clientId) ->
     (ship for ship in @ships when ship.clientId == clientId)[0]
 
+  removeShipForPlayer: (clientId) ->
+    log "Removing ship for player id=" + clientId
+    @ships = (ship for ship in @ships when ship.clientId == clientId)
+
   toJSON: ->
     json =
       width: @width

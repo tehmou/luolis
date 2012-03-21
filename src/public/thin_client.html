@@ -47,7 +47,7 @@
             ];
             var socketUrl = "${SERVER_ADDRESS}";
             log("Connecting socket to " + socketUrl + "..");
-            var socket = io.connect(socketUrl);
+            var socket = io.connect(socketUrl, { reconnect: false });
             socket.on("connect", function () {
                 log("Socket connected.");
                 socket.emit("register", null, function (clientId) {
@@ -66,6 +66,7 @@
             });
             socket.on("disconnect", function () {
                 log("Socket disconnected.");
+                socket.disconnect();
             });
         }
 

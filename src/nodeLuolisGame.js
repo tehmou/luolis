@@ -42,6 +42,9 @@ exports.createGame = function (centralSocket) {
             publishPublicSignal("parted", clientId);
             playerSockets = playerSockets.filter(function (s) { return s !== playerSockets; });
         },
+        disconnected: function () {
+            playerSockets = [];
+        },
         getStatus: function () {
             return "running";
         },

@@ -30,6 +30,8 @@ class Engine
 
   onParted: (clientId) =>
     log "Player parting with id=" + clientId
+    # FIXME: Does not remove player from physics..
+    #@world.removeShipForPlayer clientId
 
   onCollectiveInput: (collectiveInput) =>
     processPlayer = (clientId, input) =>

@@ -14,8 +14,14 @@ exports.open = function (app) {
 
     ioApp.sockets.on("connection", function (socket) {
         socket.on("createGame", function (data, fn) {
-            var index = games.push(createGame(socket));
+            var game = createGame(socket);
+            var index = games.push(game);
             fn(index);
+
+            socket.on("disconnect", function () {
+                game.disconnected();
+                delete games[index];
+            });
         });
         socket.on("register", function (data, fn) {
             var clientId = getNextClientId();
