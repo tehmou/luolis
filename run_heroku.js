@@ -1,0 +1,1 @@
+require("child_process").exec("cd src && node runServer3000.js");

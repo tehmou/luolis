@@ -1,0 +1,1 @@
+require("./server.js").open(3000, "./public");
