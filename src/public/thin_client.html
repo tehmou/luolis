@@ -45,16 +45,23 @@
             var signalsOut = [
                 "input"
             ];
-            var socketUrl = "http://localhost:9876";
+            var socketUrl = "${SERVER_ADDRESS}";
             log("Connecting socket to " + socketUrl + "..");
             var socket = io.connect(socketUrl);
             socket.on("connect", function () {
                 log("Socket connected.");
-                socket.emit("registerClient", null, function (clientId) {
+                socket.emit("register", null, function (clientId) {
                     log ("Registered with clientId=" + clientId);
-                    var broker = new luolis.broker.OnlineBroker(socket, signalsIn, signalsOut);
-                    new luolis.client.Client(broker, clientId, document.getElementById("gameCanvas"));
-                    luolis.common.toggleDomLog();
+                    socket.emit("joinGame", "0", function (msg) {
+                        if (msg === "ok") {
+                            log("Joined game " + "0");
+                            var broker = new luolis.broker.OnlineBroker(socket, signalsIn, signalsOut);
+                            new luolis.client.Client(broker, clientId, document.getElementById("gameCanvas"));
+                            luolis.common.toggleDomLog();
+                        } else {
+                            log(msg);
+                        }
+                    });
                 });
             });
             socket.on("disconnect", function () {

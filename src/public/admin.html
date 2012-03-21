@@ -36,13 +36,13 @@
         function initializeAdmin () {
             luolis.common.createDomLog(document.getElementById("log-container"));
 
-            var socketUrl = "http://localhost:9876";
+            var socketUrl = "${SERVER_ADDRESS}";
             log("Connecting socket to " + socketUrl + "..");
             var socket = io.connect(socketUrl);
             socket.on("connect", function () {
                 log("Socket connected.");
                 log("Requesting for a list of games..");
-                socket.emit("admin", null, function (games) {
+                socket.emit("listGames", null, function (games) {
                     log("Received list of games:");
                     games.forEach(function (game) {
                         log("  " + JSON.stringify(game));

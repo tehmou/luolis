@@ -52,6 +52,6 @@ class Engine
 
   updateFrame: =>
     @physics.apply @world
-    this.sendWorldJSON()
+    @sendWorldJSON()
 
 define "luolis.engine.Engine", Engine

@@ -42,12 +42,10 @@
 
         function initializeLocal () {
             var localBroker = new luolis.broker.LocalBroker();
-            localBroker.subscribe("requestJoin", function () {
-                localBroker.publish("joined", ["0"]);
-            });
             new luolis.central.Central(localBroker).run();
             new luolis.engine.Engine(localBroker).createWorld(400, 300);
             new luolis.client.Client(localBroker, "0");
+            localBroker.publish("joined", ["0"]);
         }
 
     </script>

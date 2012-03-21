@@ -37,24 +37,33 @@
             luolis.common.createDomLog(document.getElementById("log-container"));
 
             var signalsIn = [
+                "gameCreated",
                 "joined",
                 "parted",
                 "input"
             ];
             var signalsOut = [
+                "createGame",
                 "worldJSON",
                 "requestInput"
             ];
-            var socketUrl = "http://localhost:9876";
+            var socketUrl = "${SERVER_ADDRESS}";
             log("Connecting socket to " + socketUrl + "..");
             var socket = io.connect(socketUrl);
             socket.on("connect", function () {
                 log("Socket connected.");
-                socket.emit("registerEngine", null, function (clientId) {
+                socket.emit("register", null, function () {
                     log("Registered.");
-                    var broker = new luolis.broker.OnlineBroker(socket, signalsIn, signalsOut);
-                    new luolis.central.Central(broker).run();
-                    new luolis.engine.Engine(broker).createWorld(400, 300);
+                    socket.emit("createGame", null, function (gameId) {
+                        if (gameId) {
+                            log("Created game with id=" + gameId);
+                            var broker = new luolis.broker.OnlineBroker(socket, signalsIn, signalsOut);
+                            new luolis.central.Central(broker).run();
+                            new luolis.engine.Engine(broker).createWorld(400, 300);
+                        } else {
+                            log("Failed to create game");
+                        }
+                    });
                 });
             });
             socket.on("disconnect", function () {

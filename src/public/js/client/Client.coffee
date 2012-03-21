@@ -4,10 +4,8 @@ class Client
 
     @broker = broker
     @clientId = clientId
-    @el = el
 
     log "Attaching to broker"
-    @broker.subscribe "joined", @onJoined
     @broker.subscribe "requestInput", @onRequestInput
     @broker.subscribe "worldJSON", @onWorldJSON
 
@@ -18,20 +16,14 @@ class Client
     log "Attach to resize event"
     document.body.onresize = @resize
 
-    log "Requesting to join the game"
-    @broker.publish "requestJoin", [@clientId]
+    log "Creating renderer"
+    @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight, el
 
-    log "Starting rendering loop without renderer"
+    log "Starting rendering loop"
     @updateFrame()
 
   resize: =>
     @renderer.resize window.innerWidth, window.innerHeight if @renderer
-
-  onJoined: (clientId) =>
-    log "Joined, create renderer."
-    if clientId == @clientId
-      if !@renderer
-        @renderer = new luolis.game.rendering.Renderer window.innerWidth, window.innerHeight, @el
 
   onRequestInput: (timestamp) =>
     input = @inputShipController.getInput()

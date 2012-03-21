@@ -45,6 +45,8 @@ exports.open = function (port, webroot) {
                 console.log("Serving JS file " + reqPath);
                 res.sendfile(reqPath);
             }
+        } else if (reqPath.match(/\.html$/)) {
+            res.send((""+fs.readFileSync(reqPath)).replace("${SERVER_ADDRESS}", SERVER_ADDRESS));
         } else {
             console.log("Serving file " + reqPath);
             res.sendfile(reqPath);
@@ -55,5 +57,6 @@ exports.open = function (port, webroot) {
 
     app.listen(port);
 
-    console.log("express running at http://localhost:%d", port);
+    var SERVER_ADDRESS = "http://" + app.address().address + ":" + app.address().port;
+    console.log("express running at " + SERVER_ADDRESS);
 };

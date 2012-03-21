@@ -1,5 +1,7 @@
-exports.createGame = function () {
+exports.createGame = function (centralSocket) {
     var sockets = [];
+
+    enablePublicSignals(centralSocket);
 
     function publishPublicSignal (signal, data) {
         console.log("Broadcasting " + signal);
@@ -25,32 +27,25 @@ exports.createGame = function () {
         ].forEach(function (signal) {
             enablePublicSignal(signal, socket);
         });
+        sockets.push(socket);
     }
 
     return {
         join: function (socket, clientId) {
             console.log("Joining client" + clientId);
             enablePublicSignals(socket);
-            sockets.push(socket);
             publishPublicSignal("joined", clientId);
-        },
-        joinEngine: function (socket, clientId) {
-            console.log("Joining engine" + clientId);
-            enablePublicSignals(socket);
-            sockets.push(socket);
         },
         part: function (socket, clientId) {
             console.log("Parting " + clientId);
             publishPublicSignal("parted", clientId);
             sockets = sockets.filter(function (s) { return s !== socket; });
         },
-        partEngine: function (socket, clientId) {
-            sockets = sockets.filter(function (s) { return s !== socket; });
-        },
         getStatus: function () {
-            return {
-                status: "running"
-            };
+            return "running";
+        },
+        getNumPlayers: function () {
+            return sockets.length-1;
         }
     }
 };
