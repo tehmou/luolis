@@ -1,51 +1,52 @@
 exports.createGame = function (centralSocket) {
-    var sockets = [];
+    var playerSockets = [];
 
-    enablePublicSignals(centralSocket);
+    forwardPublicSignalToPlayers("requestInput", centralSocket);
+    forwardPublicSignalToPlayers("worldJSON", centralSocket);
 
     function publishPublicSignal (signal, data) {
+        centralSocket.emit(signal, data);
+        publishPublicSignalToPlayers(signal, data);
+    }
+
+    function publishPublicSignalToPlayers (signal, data) {
         console.log("Broadcasting " + signal);
-        sockets.forEach(function (socket) {
+        playerSockets.forEach(function (socket) {
             socket.emit(signal, data);
         });
     }
 
-    function enablePublicSignal (signal, socket) {
+    function forwardPublicSignalToPlayers (signal, socket) {
         console.log("Enabling public signal '" + signal + "'");
         socket.on(signal, function (data) {
             publishPublicSignal(signal, data);
         });
     }
 
-    function enablePublicSignals (socket) {
-        [
-            "worldJSON",
-            "joined",
-            "parted",
-            "input",
-            "requestInput"
-        ].forEach(function (signal) {
-            enablePublicSignal(signal, socket);
+    function forwardOneWaySignal (signal, fromSocket, toSocket) {
+        console.log("Enabling one way signal '" + signal + "'");
+        fromSocket.on(signal, function (data) {
+            toSocket.emit(signal, data);
         });
-        sockets.push(socket);
     }
 
     return {
         join: function (socket, clientId) {
             console.log("Joining client" + clientId);
-            enablePublicSignals(socket);
+            playerSockets.push(socket);
+            forwardOneWaySignal("input", socket, centralSocket);
             publishPublicSignal("joined", clientId);
         },
         part: function (socket, clientId) {
             console.log("Parting " + clientId);
             publishPublicSignal("parted", clientId);
-            sockets = sockets.filter(function (s) { return s !== socket; });
+            playerSockets = playerSockets.filter(function (s) { return s !== playerSockets; });
         },
         getStatus: function () {
             return "running";
         },
         getNumPlayers: function () {
-            return sockets.length-1;
+            return playerSockets.length-1;
         }
     }
 };
