@@ -1,1 +1,1 @@
-require("./server/server.js").open(process.env.PORT || 3000, "./client");
+require("./server/server.js").open(process.env.PORT || 3000, "./client", "http://gentle-river-8737.herokuapp.com");

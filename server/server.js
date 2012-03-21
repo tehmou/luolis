@@ -14,7 +14,7 @@ var coffee = require("coffee-script"),
     nodeLuolis = require("./nodeLuolis.js");
 
 
-exports.open = function (port, webroot) {
+exports.open = function (port, webroot, SERVER_ADDRESS) {
 
     webroot = webroot || './public';
     var app = express.createServer();
@@ -57,6 +57,6 @@ exports.open = function (port, webroot) {
 
     app.listen(port);
 
-    var SERVER_ADDRESS = "http://" + app.address().address + ":" + app.address().port;
+    SERVER_ADDRESS = SERVER_ADDRESS || "http://" + app.address().address + ":" + app.address().port;
     console.log("express running at " + SERVER_ADDRESS);
 };
