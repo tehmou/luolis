@@ -1,1 +1,1 @@
-web: node runServer3000.js
+web: node runHeroku.js
