@@ -1,6 +1,7 @@
 {
-    "name": "luolis-build",
+    "name": "luolis-docs",
     "version": "0.0.1",
     "dependencies": {
+        "wrench": "1.3.7"
     }
 }
