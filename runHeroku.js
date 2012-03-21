@@ -1,1 +1,1 @@
-require("./server/server.js").open(11287, "./client");
+require("./server/server.js").open(process.env.PORT || 3000, "./client");
