@@ -11,7 +11,7 @@ ssh $SERVER $KEY "mkdir ~/backup"
 ssh $SERVER $KEY "mv ~/luolis $BACKUP_DIR"
 
 echo "Copying to $DESTINATION"
-scp $KEY -r server $SERVER:$DESTINATION
+scp $KEY -r src $SERVER:$DESTINATION
 
 echo "Starting node"
 #ssh $SERVER $KEY "node ~/luolis/server.js &"

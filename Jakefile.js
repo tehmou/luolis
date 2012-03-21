@@ -13,10 +13,14 @@
         sys.puts("Run 'jake --tasks' to see possible tasks")
     });
 
-    desc("Run the local server at port given in first argument");
-    task("run-server", function (port) {
-        port = port === undefined ? 9876 : port;
-        require("./src/server.js").open(port, "./src/public");
+    desc("Deploy the app onto the server");
+    task("deploy", function () {
+        sys.puts("Not implemented!");
+    });
+
+    desc("Run the local server");
+    task("run-server", function () {
+        require("./src/runServer.js");
     });
 
     desc("Build the documentation");
